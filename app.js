@@ -171,11 +171,14 @@
             check();
         }
         else {
+            // digit key. Allow a lone "0" (a valid answer, e.g. 6 − 6 = 0), but
+            // never a leading zero followed by more digits: "0" then "5" → "5".
             if (typed.length >= 3)
                 return;
-            if (typed === "" && key === "0")
-                return; // no leading zero
-            typed += key;
+            if (typed === "0")
+                typed = key;
+            else
+                typed += key;
             updateAnswerBox();
             clearFeedback();
         }
