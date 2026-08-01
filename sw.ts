@@ -10,7 +10,7 @@
 
 const sw = self as unknown as ServiceWorkerGlobalScope;
 
-const CACHE = "math-adventure-v1";
+const CACHE = "math-adventure-v2";
 const ASSETS: string[] = [
   "./",
   "./index.html",
@@ -38,8 +38,10 @@ sw.addEventListener("activate", (event: ExtendableEvent) => {
   );
 });
 
-// Cache-first for same-origin GETs; fall back to the network and cache new
-// same-origin responses so subsequent loads are fully offline.
+// Network-first for same-origin GETs: always try the network so new deploys
+// are picked up as soon as the device is online, refreshing the cache as we go;
+// fall back to the cache (then the app shell) only when offline. The precached
+// shell still makes the very first offline load work.
 sw.addEventListener("fetch", (event: FetchEvent) => {
   const req = event.request;
   if (req.method !== "GET") return;
@@ -47,17 +49,18 @@ sw.addEventListener("fetch", (event: FetchEvent) => {
   if (url.origin !== sw.location.origin) return;
 
   event.respondWith(
-    caches.match(req).then((cached) => {
-      if (cached) return cached;
-      return fetch(req)
-        .then((res) => {
-          if (res.ok && res.type === "basic") {
-            const copy = res.clone();
-            caches.open(CACHE).then((cache) => cache.put(req, copy));
-          }
-          return res;
-        })
-        .catch(() => caches.match("./index.html").then((r) => r ?? Response.error()));
-    })
+    fetch(req)
+      .then((res) => {
+        if (res.ok && res.type === "basic") {
+          const copy = res.clone();
+          caches.open(CACHE).then((cache) => cache.put(req, copy));
+        }
+        return res;
+      })
+      .catch(() =>
+        caches.match(req).then((cached) =>
+          cached ?? caches.match("./index.html").then((r) => r ?? Response.error())
+        )
+      )
   );
 });
