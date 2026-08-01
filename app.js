@@ -373,6 +373,15 @@
         btn.classList.toggle("on");
         el.opHint.textContent = "";
     });
+    // ---------- Disable zoom (iOS Safari) ----------
+    // touch-action: manipulation in CSS stops double-tap zoom (typing "11"
+    // quickly must never zoom); these guards stop pinch zoom too, since iOS
+    // ignores user-scalable=no in the viewport meta.
+    document.addEventListener("gesturestart", (e) => e.preventDefault());
+    document.addEventListener("touchmove", (e) => {
+        if (e.touches.length > 1)
+            e.preventDefault();
+    }, { passive: false });
     // ---------- Service worker (offline / PWA) ----------
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {

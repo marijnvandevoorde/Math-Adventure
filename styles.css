@@ -25,6 +25,9 @@ html, body {
     system-ui, -apple-system, sans-serif;
   color: var(--ink);
   user-select: none;
+  /* No pinch or double-tap zoom anywhere — rapid taps on the same key
+     (e.g. entering "11") must never trigger iOS double-tap zoom. */
+  touch-action: manipulation;
 }
 
 /* Gradient painted on <html>, fixed to the viewport, with a solid fallback
