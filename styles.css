@@ -608,13 +608,13 @@ input[type="range"]::-moz-range-thumb {
 .sbox {
   width: 31%;
   min-width: 66px;
-  height: clamp(56px, 9.5vh, 92px);
+  height: clamp(48px, 7.5vh, 88px);
   background: var(--card);
   border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(28px, 5.6vh, 46px);
+  font-size: clamp(26px, 5vh, 44px);
   font-weight: 800;
   box-shadow: 0 5px 0 rgba(0, 0, 0, 0.14);
 }
@@ -642,13 +642,23 @@ input[type="range"]::-moz-range-thumb {
 .legs {
   display: block;
   width: 100%;
-  height: clamp(34px, 6.5vh, 62px);
+  height: clamp(28px, 5vh, 56px);
 }
 .legs line { stroke: #fff; stroke-width: 6; stroke-linecap: round; opacity: 0.92; }
 .sbot {
   display: flex;
   justify-content: space-between;
 }
+
+/* Keep the splits stack comfortably clear of the topbar and the numpad:
+   a slightly smaller mascot, and guaranteed breathing room at the bottom
+   (on real iPhones the safe-areas eat into the play area). */
+#scrSplits .play {
+  gap: clamp(6px, 1.4vh, 14px);
+  padding-bottom: clamp(12px, 2.4vh, 26px);
+}
+#splitsMascot { font-size: clamp(34px, 6.5vh, 84px); }
+#scrSplits .feedback { min-height: clamp(22px, 4vh, 34px); }
 
 /* Splitsen in landscape: diagram stays compact next to the numpad. */
 @media (orientation: landscape) {
