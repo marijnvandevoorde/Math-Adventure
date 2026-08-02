@@ -590,16 +590,6 @@ input[type="range"]::-moz-range-thumb {
 .mascot.festive { font-size: clamp(64px, 12vh, 110px); }
 
 /* --- splitsen spel --- */
-.goalrow {
-  display: flex;
-  justify-content: center;
-  gap: clamp(1px, 0.6vw, 5px);
-  font-size: clamp(15px, 2.6vh, 24px);
-  line-height: 1;
-}
-.goalrow span { opacity: 0.25; filter: grayscale(1); transition: opacity 0.2s, filter 0.2s; }
-.goalrow span.done { opacity: 1; filter: none; }
-
 .splitwrap {
   position: relative;
   width: min(82vw, 320px);
@@ -663,7 +653,6 @@ input[type="range"]::-moz-range-thumb {
 /* Splitsen in landscape: diagram stays compact next to the numpad. */
 @media (orientation: landscape) {
   .splitwrap { width: min(38vw, 340px); }
-  .goalrow { font-size: clamp(14px, 3vh, 24px); }
 }
 /* Tablets portrait: roomier diagram. */
 @media (min-width: 700px) and (orientation: portrait) {

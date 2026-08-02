@@ -78,7 +78,7 @@
         streakBox: byId("streakBox"),
         numpad: byId("numpad"),
         // splitsen
-        goalRow: byId("goalRow"),
+        splitsCount: byId("splitsCount"),
         splitsMascot: byId("splitsMascot"),
         splitsTop: byId("splitsTop"),
         boxLeft: byId("boxLeft"),
@@ -300,41 +300,61 @@
         }, 560);
     }
     const SPLITS_GOAL = 10;
+    const SPLITS_RND_MAX = 20;
     let splitsChoice = 10;
     let split = { total: 10, given: 4, answer: 6, givenSide: "left" };
     let splitsTyped = "";
     let splitsLocked = false;
     let splitsGood = 0;
-    // Sterrenrij (10 vakjes) eenmalig opbouwen.
-    const stars = [];
-    for (let i = 0; i < SPLITS_GOAL; i++) {
-        const s = document.createElement("span");
-        s.textContent = "⭐";
-        el.goalRow.appendChild(s);
-        stars.push(s);
+    // Bij een vast topgetal (5 of 10) werken we met een geschudde stapel: elk
+    // gegeven getal (0 t/m total) komt precies één keer voorbij. Is de stapel
+    // op, dan schudden we opnieuw — zo krijg je nooit steeds dezelfde som.
+    let deck = [];
+    let deckTotal = -1;
+    function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const tmp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = tmp;
+        }
+        return arr;
     }
-    function splitsTotal() {
-        return splitsChoice === "rnd" ? 3 + Math.floor(Math.random() * 8) : splitsChoice; // 3 t/m 10
+    function drawGiven(total) {
+        if (deckTotal !== total || deck.length === 0) {
+            deck = shuffle(Array.from({ length: total + 1 }, (_, i) => i));
+            deckTotal = total;
+            // Geen directe herhaling over de schudgrens heen.
+            if (deck.length > 1 && deck[deck.length - 1] === split.given) {
+                const top = deck.pop();
+                deck.unshift(top);
+            }
+        }
+        return deck.pop();
     }
     function newSplit() {
-        let next;
-        let tries = 0;
-        do {
-            const total = splitsTotal();
-            const given = Math.floor(Math.random() * (total + 1)); // 0 t/m total
-            next = {
-                total,
-                given,
-                answer: total - given,
-                givenSide: Math.random() < 0.5 ? "left" : "right",
-            };
-            tries++;
-        } while (tries < 10 &&
-            split &&
-            next.total === split.total &&
-            next.given === split.given &&
-            next.givenSide === split.givenSide);
-        split = next;
+        let total;
+        let given;
+        if (splitsChoice === "rnd") {
+            // Verrassing: topgetal 3 t/m 20, gegeven getal willekeurig — maar niet
+            // twee keer exact dezelfde som na elkaar.
+            let tries = 0;
+            do {
+                total = 3 + Math.floor(Math.random() * (SPLITS_RND_MAX - 2)); // 3 t/m 20
+                given = Math.floor(Math.random() * (total + 1)); // 0 t/m total
+                tries++;
+            } while (tries < 10 && total === split.total && given === split.given);
+        }
+        else {
+            total = splitsChoice;
+            given = drawGiven(total);
+        }
+        split = {
+            total,
+            given,
+            answer: total - given,
+            givenSide: Math.random() < 0.5 ? "left" : "right",
+        };
         splitsTyped = "";
         renderSplit();
     }
@@ -361,12 +381,12 @@
             box.className = "sbox answer filled";
         }
     }
-    function renderStars() {
-        stars.forEach((s, i) => s.classList.toggle("done", i < splitsGood));
+    function renderCount() {
+        el.splitsCount.textContent = splitsGood + "/" + SPLITS_GOAL;
     }
     function resetSplitsRun() {
         splitsGood = 0;
-        renderStars();
+        renderCount();
         clearSplitsFeedback();
         newSplit();
     }
@@ -404,7 +424,7 @@
         splitsLocked = true;
         addStar();
         splitsGood += 1;
-        renderStars();
+        renderCount();
         answerEl().className = "sbox answer filled ok";
         el.splitsFeedback.textContent = pick(CHEERS);
         el.splitsFeedback.className = "feedback good";
