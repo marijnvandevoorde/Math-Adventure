@@ -43,7 +43,8 @@ html {
 
 body { background: transparent; }
 
-#app {
+/* Each screen (keuzescherm, spellen, feest) is a full-height layer. */
+.screen {
   position: relative;
   height: 100dvh;
   max-width: 560px;
@@ -52,6 +53,10 @@ body { background: transparent; }
   flex-direction: column;
   padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
 }
+/* !important: must also beat `.screen.game { display: grid }` in landscape. */
+.screen[hidden] { display: none !important; }
+
+.push-right { margin-left: auto; }
 
 /* ===== Top bar ===== */
 .topbar {
@@ -75,7 +80,6 @@ body { background: transparent; }
 .score-star { filter: drop-shadow(0 0 4px var(--yellow)); }
 .streak { margin-left: 2px; }
 .streak.dim { opacity: 0.45; filter: grayscale(0.8); }
-.topbar .icon-btn { margin-left: auto; }
 
 .icon-btn {
   border: none;
@@ -377,7 +381,7 @@ input[type="range"]::-moz-range-thumb {
 
 /* ===== Responsive: tablets / iPad (bigger, roomier) ===== */
 @media (min-width: 700px) {
-  #app { max-width: 780px; }
+  .screen { max-width: 780px; }
   .play { gap: 16px; }
   .equation {
     font-size: clamp(46px, 7vw, 74px);
@@ -404,7 +408,7 @@ input[type="range"]::-moz-range-thumb {
    child never has to scroll, on phones and tablets alike. Sizes scale with
    viewport height (the limiting axis in landscape) and cap on big screens. */
 @media (orientation: landscape) {
-  #app {
+  .screen.game {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: auto minmax(0, 1fr);
@@ -452,4 +456,207 @@ input[type="range"]::-moz-range-thumb {
   .answer-box.correct, .answer-box.wrong,
   .modal { animation: none !important; }
   .fly-answer { transition: opacity 0.2s linear !important; }
+}
+
+/* ===================================================================== */
+/* ===== Keuzescherm, Splitsen & feest ================================= */
+/* ===================================================================== */
+
+.menu-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(6px, 1.6vh, 16px);
+  padding: 10px 22px calc(18px + env(safe-area-inset-bottom));
+  min-height: 0;
+}
+
+.home-title {
+  text-align: center;
+  color: #fff;
+  font-size: clamp(30px, 8vw, 44px);
+  font-weight: 800;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  line-height: 1.1;
+  margin: 0;
+}
+.home-sub {
+  text-align: center;
+  color: #fff;
+  opacity: 0.9;
+  font-size: clamp(16px, 4vw, 21px);
+  font-weight: 700;
+  margin: 0;
+}
+
+/* --- game cards --- */
+.gamecards {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2.4vh, 22px);
+  width: 100%;
+  max-width: 420px;
+  margin: 6px auto 0;
+}
+.gamecard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: var(--card);
+  border: none;
+  border-radius: 24px;
+  padding: clamp(14px, 2.6vh, 24px) 16px;
+  font-family: inherit;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 7px 0 rgba(0, 0, 0, 0.16);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.gamecard:active { transform: translateY(5px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.16); }
+.gc-icon { font-size: clamp(34px, 6vh, 48px); line-height: 1; }
+.gc-name { font-size: clamp(22px, 4.4vh, 30px); font-weight: 800; }
+.gc-desc { font-size: clamp(13px, 2.4vh, 16px); font-weight: 700; opacity: 0.6; line-height: 1.3; }
+
+/* mini split-diagram on the Splitsen card */
+.gc-diagram {
+  position: relative;
+  width: 116px;
+  height: clamp(48px, 8vh, 62px);
+}
+.gc-diagram svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.gc-diagram line { stroke: #c9b8f5; stroke-width: 3.5; stroke-linecap: round; }
+.gd {
+  position: absolute;
+  width: 36px;
+  height: 26px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  background: #f3eeff;
+}
+.gd.top { left: 40px; top: 0; color: var(--purple); background: #ece4ff; }
+.gd.left { left: 4px; bottom: 0; color: var(--blue); }
+.gd.right { right: 4px; bottom: 0; color: var(--orange); }
+
+/* --- splits-setup & feest --- */
+.bigq {
+  text-align: center;
+  color: #fff;
+  font-size: clamp(22px, 5.4vw, 32px);
+  font-weight: 800;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  margin: 0;
+  padding: 0 12px;
+}
+.numchoices {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2.2vh, 20px);
+  width: 100%;
+  max-width: 320px;
+  margin: 8px auto 0;
+}
+.numchoice {
+  background: var(--card);
+  border: none;
+  border-radius: 22px;
+  padding: clamp(12px, 2.2vh, 20px);
+  text-align: center;
+  font-family: inherit;
+  font-size: clamp(30px, 6vh, 42px);
+  font-weight: 800;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 7px 0 rgba(0, 0, 0, 0.16);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.numchoice:active { transform: translateY(5px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.16); }
+.numchoice.c5 { color: var(--blue); }
+.numchoice.c10 { color: var(--purple); }
+.numchoice.rnd { color: var(--pink); }
+.numchoice small {
+  display: block;
+  font-size: clamp(13px, 2vh, 16px);
+  font-weight: 700;
+  opacity: 0.6;
+}
+.numchoice.again { font-size: clamp(20px, 3.6vh, 27px); color: var(--green); }
+.numchoice.other { font-size: clamp(20px, 3.6vh, 27px); color: var(--purple); }
+.mascot.festive { font-size: clamp(64px, 12vh, 110px); }
+
+/* --- splitsen spel --- */
+.goalrow {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1px, 0.6vw, 5px);
+  font-size: clamp(15px, 2.6vh, 24px);
+  line-height: 1;
+}
+.goalrow span { opacity: 0.25; filter: grayscale(1); transition: opacity 0.2s, filter 0.2s; }
+.goalrow span.done { opacity: 1; filter: none; }
+
+.splitwrap {
+  position: relative;
+  width: min(82vw, 320px);
+  margin: 0 auto;
+}
+.sbox {
+  width: 31%;
+  min-width: 66px;
+  height: clamp(56px, 9.5vh, 92px);
+  background: var(--card);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(28px, 5.6vh, 46px);
+  font-weight: 800;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.14);
+}
+.sbox.top {
+  margin: 0 auto;
+  color: var(--purple);
+  border: 4px solid var(--purple);
+}
+.sbox.given { color: var(--blue); }
+.sbox.answer {
+  color: var(--orange);
+  border: 4px dashed var(--orange);
+}
+.sbox.answer.filled { color: var(--ink); }
+.sbox.answer.ok {
+  color: var(--green);
+  border: 4px solid var(--green);
+  animation: pop 0.4s ease;
+}
+.sbox.answer.wrong {
+  color: var(--red);
+  border-color: var(--red);
+  animation: wrongshake 0.45s ease;
+}
+.legs {
+  display: block;
+  width: 100%;
+  height: clamp(34px, 6.5vh, 62px);
+}
+.legs line { stroke: #fff; stroke-width: 6; stroke-linecap: round; opacity: 0.92; }
+.sbot {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Splitsen in landscape: diagram stays compact next to the numpad. */
+@media (orientation: landscape) {
+  .splitwrap { width: min(38vw, 340px); }
+  .goalrow { font-size: clamp(14px, 3vh, 24px); }
+}
+/* Tablets portrait: roomier diagram. */
+@media (min-width: 700px) and (orientation: portrait) {
+  .splitwrap { width: 400px; }
+  .gamecards, .numchoices { max-width: 460px; }
 }

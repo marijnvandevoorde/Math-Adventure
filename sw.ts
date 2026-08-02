@@ -10,7 +10,7 @@
 
 const sw = self as unknown as ServiceWorkerGlobalScope;
 
-const CACHE = "math-adventure-v2";
+const CACHE = "math-adventure-v3";
 const ASSETS: string[] = [
   "./",
   "./index.html",

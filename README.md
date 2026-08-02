@@ -1,14 +1,17 @@
-# Math Adventure 🧮🚀
+# Rekenavontuur 🧮🚀
 
-A colorful, **installable** arithmetic practice game for children aged
-**6–9**. Written in **pure TypeScript**, works **fully offline** as a PWA, and
-is **responsive** for phone and iPad (portrait & landscape).
+A colorful, **installable** arithmetic practice app for children aged
+**6–9**, with a **Dutch** interface. Written in **pure TypeScript**, works
+**fully offline** as a PWA, and is **responsive** for phone and iPad
+(portrait & landscape).
 
-![ages](https://img.shields.io/badge/ages-6--9-ff6bcb) ![pwa](https://img.shields.io/badge/PWA-offline-2ecc71) ![typescript](https://img.shields.io/badge/TypeScript-strict-4d9dff)
+![ages](https://img.shields.io/badge/leeftijd-6--9-ff6bcb) ![pwa](https://img.shields.io/badge/PWA-offline-2ecc71) ![typescript](https://img.shields.io/badge/TypeScript-strict-4d9dff)
 
-<p align="center"><img src="icons/icon-192.png" width="120" alt="Math Adventure icon"></p>
+<p align="center"><img src="icons/icon-192.png" width="120" alt="Rekenavontuur icon"></p>
 
-## How to play
+The app opens on a **keuzescherm** (game picker) with two games:
+
+## 🔗 Rekenreeksen
 
 - An equation appears at the top (it starts simple, like `3 + 4`).
 - Tap the big **numpad** to enter the answer, then **✓** (or press `Enter`).
@@ -17,14 +20,28 @@ is **responsive** for phone and iPad (portrait & landscape).
   become the first number of the next problem.** So `3 + 4 = 7` is followed by
   `7 − 2 = …`, chaining forever. Answers never go above the max.
 
-## Settings ⚙️
+### Settings ⚙️ (for Rekenreeksen)
 
 | Setting | Default | Notes |
 | --- | --- | --- |
-| **How high do we go?** | `20` | Slider 5–100. No answer ever exceeds this. |
-| **Which math?** | ➕ ➖ | Toggle Plus, Minus, Times, Divide — pick one or more. |
+| **Hoe hoog gaan we?** | `20` | Slider 5–100. No answer ever exceeds this. |
+| **Welke sommen?** | ➕ ➖ | Toggle Plus, Min, Keer, Delen — pick one or more. |
 
 Settings persist between visits (browser `localStorage`).
+
+## ✂️ Splitsen
+
+Number-splitting practice (getallen splitsen):
+
+- First pick the top number: **5**, **10**, or **? verrassing** (random 3–10
+  each turn).
+- The top number splits along two lines into two boxes; one is filled in, the
+  child enters the missing part (`10 = 4 + ?` → `6`). The filled side swaps
+  randomly so both directions get practiced.
+- Goal: **10 op een rij** — a row of ten stars fills up, one per correct
+  answer. Wrong answers shake gently but **don't** reset the stars.
+- After ten correct answers: a 🏆 celebration with "Nog een keer!" (same
+  number) or "Ander getal" (back to the picker).
 
 ## Run it
 

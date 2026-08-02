@@ -1,13 +1,20 @@
 "use strict";
-/* ===== Math Adventure — game logic (ages 6-9), TypeScript =====
- * Chained arithmetic practice: the answer to each exercise becomes the
- * first number of the next one. Results always stay within [0, max].
+/* ===== Rekenavontuur — spellogica (6-9 jaar), TypeScript =====
+ * Twee spellen in één PWA:
+ *  - Rekenreeksen: het antwoord van elke som wordt het eerste getal van de
+ *    volgende som. Antwoorden blijven altijd binnen [0, max].
+ *  - Splitsen: splits een topgetal in twee delen; vul het lege vakje in.
+ *    Doel: 10 goed ("10 op een rij" — fout antwoord reset de rij NIET).
  */
 (() => {
     "use strict";
-    // ---------- Config (persisted) ----------
+    // ---------- Teksten (Nederlands) ----------
+    const CHEERS = ["Super! 🎉", "Goed zo! ⭐", "Klasse! 🤩", "Ja! 🚀", "Geweldig! 🌈", "Briljant! 💎", "Joepie! 🎊"];
+    const TRIES = ["Probeer nog eens! 💪", "Bijna! 🙂", "Net niet — jij kan dit!", "Ga zo door! ✨"];
+    const HINT_MIN_ONE_OP = "Kies minstens één soort som! 🙂";
+    // ---------- Config (bewaard in localStorage) ----------
     const DEFAULTS = { max: 20, ops: ["+", "-"] };
-    let config = loadConfig();
+    const config = loadConfig();
     function isOp(o) {
         return o === "+" || o === "-" || o === "*" || o === "/";
     }
@@ -30,7 +37,7 @@
             }
         }
         catch (e) {
-            /* ignore corrupt storage */
+            /* kapotte opslag negeren */
         }
         return { max: DEFAULTS.max, ops: DEFAULTS.ops.slice() };
     }
@@ -39,37 +46,48 @@
             localStorage.setItem("mathAdventureConfig", JSON.stringify(config));
         }
         catch (e) {
-            /* storage may be unavailable */
+            /* opslag kan ontbreken */
         }
     }
-    // ---------- State ----------
-    let current;
-    let typed = "";
-    let locked = false;
-    let score = 0;
-    let streak = 0;
-    const mascots = ["🦄", "🐢", "🐰", "🦊", "🐼", "🐸", "🐥", "🐙", "🦖", "🐳"];
-    const opSymbol = { "+": "+", "-": "−", "*": "×", "/": "÷" };
     // ---------- DOM ----------
     function byId(id) {
         const node = document.getElementById(id);
         if (!node)
-            throw new Error("Missing element #" + id);
+            throw new Error("Element ontbreekt: #" + id);
         return node;
     }
     const el = {
+        // schermen
+        scrHome: byId("scrHome"),
+        scrReeksen: byId("scrReeksen"),
+        scrSplitsSetup: byId("scrSplitsSetup"),
+        scrSplits: byId("scrSplits"),
+        scrFeest: byId("scrFeest"),
+        // keuzescherm
+        btnReeksen: byId("btnReeksen"),
+        btnSplitsen: byId("btnSplitsen"),
+        homeMascot: byId("homeMascot"),
+        // rekenreeksen
         opA: byId("opA"),
         operator: byId("operator"),
         opB: byId("opB"),
         answerBox: byId("answerBox"),
-        equation: byId("equation"),
         feedback: byId("feedback"),
         mascot: byId("mascot"),
-        scoreValue: byId("scoreValue"),
         streakValue: byId("streakValue"),
         streakBox: byId("streakBox"),
         numpad: byId("numpad"),
-        settingsBtn: byId("settingsBtn"),
+        // splitsen
+        goalRow: byId("goalRow"),
+        splitsMascot: byId("splitsMascot"),
+        splitsTop: byId("splitsTop"),
+        boxLeft: byId("boxLeft"),
+        boxRight: byId("boxRight"),
+        splitsFeedback: byId("splitsFeedback"),
+        splitsNumpad: byId("splitsNumpad"),
+        btnAgain: byId("btnAgain"),
+        btnOther: byId("btnOther"),
+        // instellingen
         settingsModal: byId("settingsModal"),
         closeSettings: byId("closeSettings"),
         maxRange: byId("maxRange"),
@@ -77,8 +95,41 @@
         opToggles: byId("opToggles"),
         opHint: byId("opHint"),
     };
-    // ---------- Exercise generation ----------
-    // Returns array of valid moves given a starting value `a`.
+    const mascots = ["🦄", "🐢", "🐰", "🦊", "🐼", "🐸", "🐥", "🐙", "🦖", "🐳"];
+    const opSymbol = { "+": "+", "-": "−", "*": "×", "/": "÷" };
+    function pick(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+    const screens = {
+        home: el.scrHome,
+        reeksen: el.scrReeksen,
+        splitsSetup: el.scrSplitsSetup,
+        splits: el.scrSplits,
+        feest: el.scrFeest,
+    };
+    let active = "home";
+    function show(name) {
+        Object.keys(screens).forEach((k) => {
+            screens[k].hidden = k !== name;
+        });
+        active = name;
+    }
+    // ---------- Score (gedeeld over spellen) ----------
+    let score = 0;
+    function addStar() {
+        score += 1;
+        document.querySelectorAll(".js-score").forEach((n) => {
+            n.textContent = String(score);
+        });
+    }
+    // =====================================================================
+    // ===== Rekenreeksen ==================================================
+    // =====================================================================
+    let current;
+    let typed = "";
+    let locked = false;
+    let streak = 0;
+    // Alle geldige zetten vanaf startwaarde `a`.
     function validMoves(a, max, ops) {
         const moves = [];
         ops.forEach((op) => {
@@ -91,15 +142,15 @@
                     moves.push({ op, b, answer: a - b });
             }
             else if (op === "*") {
-                // Keep it meaningful: a,b >= 2, result within max. (×0 / ×1 are trivial,
-                // and a=0 would loop forever since 0*b is always <= max.)
+                // Zinvol houden: a,b >= 2, resultaat binnen max. (×0 / ×1 zijn triviaal,
+                // en a=0 zou eindeloos doorlopen want 0*b blijft <= max.)
                 if (a >= 2) {
                     for (let b = 2; a * b <= max; b++)
                         moves.push({ op, b, answer: a * b });
                 }
             }
             else {
-                // division: b divides a evenly, b >= 2  →  whole answer < a
+                // delen: b deelt a precies, b >= 2 → heel antwoord < a
                 for (let b = 2; b <= a; b++) {
                     if (a % b === 0)
                         moves.push({ op, b, answer: a / b });
@@ -108,11 +159,6 @@
         });
         return moves;
     }
-    function pick(arr) {
-        return arr[Math.floor(Math.random() * arr.length)];
-    }
-    // Build the next exercise starting from `startValue`. If no chained move is
-    // possible (e.g. stuck at max with only +), begin a fresh small number.
     function makeExercise(startValue) {
         const max = config.max;
         const ops = config.ops.length ? config.ops : DEFAULTS.ops;
@@ -125,7 +171,7 @@
         const m = pick(moves);
         return { a, op: m.op, b: m.b, answer: m.answer };
     }
-    // Pick a small starting number that has at least one valid move.
+    // Klein startgetal met minstens één geldige zet.
     function freshStart(max, ops) {
         const cap = Math.min(9, max);
         const candidates = [];
@@ -141,7 +187,6 @@
         }
         return candidates.length ? pick(candidates) : 1;
     }
-    // ---------- Render ----------
     function render() {
         el.opA.textContent = String(current.a);
         el.operator.textContent = opSymbol[current.op];
@@ -158,7 +203,14 @@
             el.answerBox.className = "answer-box filled";
         }
     }
-    // ---------- Input ----------
+    function typeDigit(value, key) {
+        // Losse "0" mag (geldig antwoord), maar geen voorloopnul: "0" dan "5" → "5".
+        if (value.length >= 3)
+            return value;
+        if (value === "0")
+            return key;
+        return value + key;
+    }
     function onKey(key) {
         if (locked)
             return;
@@ -171,14 +223,7 @@
             check();
         }
         else {
-            // digit key. Allow a lone "0" (a valid answer, e.g. 6 − 6 = 0), but
-            // never a leading zero followed by more digits: "0" then "5" → "5".
-            if (typed.length >= 3)
-                return;
-            if (typed === "0")
-                typed = key;
-            else
-                typed += key;
+            typed = typeDigit(typed, key);
             updateAnswerBox();
             clearFeedback();
         }
@@ -196,13 +241,10 @@
         else
             onWrong();
     }
-    const CHEERS = ["Awesome! 🎉", "Perfect! ⭐", "You rock! 🤩", "Yes! 🚀", "Super! 🌈", "Brilliant! 💎", "Woohoo! 🎊"];
-    const TRIES = ["Try again! 💪", "Almost! 🙂", "Not quite — you got this!", "Keep going! ✨"];
     function onCorrect() {
         locked = true;
-        score += 1;
+        addStar();
         streak += 1;
-        el.scoreValue.textContent = String(score);
         el.streakValue.textContent = String(streak);
         el.streakBox.classList.toggle("dim", streak === 0);
         el.answerBox.className = "answer-box filled correct";
@@ -234,7 +276,7 @@
             updateAnswerBox();
         }, 700);
     }
-    // ---------- Fly animation ----------
+    // ---------- Vlieg-animatie ----------
     function flyAnswerToOperand(done) {
         const from = el.answerBox.getBoundingClientRect();
         const to = el.opA.getBoundingClientRect();
@@ -257,6 +299,243 @@
             done();
         }, 560);
     }
+    const SPLITS_GOAL = 10;
+    let splitsChoice = 10;
+    let split = { total: 10, given: 4, answer: 6, givenSide: "left" };
+    let splitsTyped = "";
+    let splitsLocked = false;
+    let splitsGood = 0;
+    // Sterrenrij (10 vakjes) eenmalig opbouwen.
+    const stars = [];
+    for (let i = 0; i < SPLITS_GOAL; i++) {
+        const s = document.createElement("span");
+        s.textContent = "⭐";
+        el.goalRow.appendChild(s);
+        stars.push(s);
+    }
+    function splitsTotal() {
+        return splitsChoice === "rnd" ? 3 + Math.floor(Math.random() * 8) : splitsChoice; // 3 t/m 10
+    }
+    function newSplit() {
+        let next;
+        let tries = 0;
+        do {
+            const total = splitsTotal();
+            const given = Math.floor(Math.random() * (total + 1)); // 0 t/m total
+            next = {
+                total,
+                given,
+                answer: total - given,
+                givenSide: Math.random() < 0.5 ? "left" : "right",
+            };
+            tries++;
+        } while (tries < 10 &&
+            split &&
+            next.total === split.total &&
+            next.given === split.given &&
+            next.givenSide === split.givenSide);
+        split = next;
+        splitsTyped = "";
+        renderSplit();
+    }
+    function answerEl() {
+        return split.givenSide === "left" ? el.boxRight : el.boxLeft;
+    }
+    function givenEl() {
+        return split.givenSide === "left" ? el.boxLeft : el.boxRight;
+    }
+    function renderSplit() {
+        el.splitsTop.textContent = String(split.total);
+        givenEl().textContent = String(split.given);
+        givenEl().className = "sbox given";
+        updateSplitsBox();
+    }
+    function updateSplitsBox() {
+        const box = answerEl();
+        if (splitsTyped === "") {
+            box.textContent = "?";
+            box.className = "sbox answer";
+        }
+        else {
+            box.textContent = splitsTyped;
+            box.className = "sbox answer filled";
+        }
+    }
+    function renderStars() {
+        stars.forEach((s, i) => s.classList.toggle("done", i < splitsGood));
+    }
+    function resetSplitsRun() {
+        splitsGood = 0;
+        renderStars();
+        clearSplitsFeedback();
+        newSplit();
+    }
+    function onSplitsKey(key) {
+        if (splitsLocked)
+            return;
+        if (key === "clear") {
+            splitsTyped = splitsTyped.slice(0, -1);
+            updateSplitsBox();
+            clearSplitsFeedback();
+        }
+        else if (key === "check") {
+            checkSplit();
+        }
+        else {
+            splitsTyped = typeDigit(splitsTyped, key);
+            updateSplitsBox();
+            clearSplitsFeedback();
+        }
+    }
+    function clearSplitsFeedback() {
+        el.splitsFeedback.textContent = "";
+        el.splitsFeedback.className = "feedback";
+    }
+    function checkSplit() {
+        if (splitsTyped === "")
+            return;
+        const val = parseInt(splitsTyped, 10);
+        if (val === split.answer)
+            onSplitCorrect();
+        else
+            onSplitWrong();
+    }
+    function onSplitCorrect() {
+        splitsLocked = true;
+        addStar();
+        splitsGood += 1;
+        renderStars();
+        answerEl().className = "sbox answer filled ok";
+        el.splitsFeedback.textContent = pick(CHEERS);
+        el.splitsFeedback.className = "feedback good";
+        el.splitsMascot.className = "mascot happy";
+        burstConfetti();
+        window.setTimeout(() => {
+            el.splitsMascot.textContent = pick(mascots);
+            el.splitsMascot.className = "mascot";
+            splitsLocked = false;
+            if (splitsGood >= SPLITS_GOAL) {
+                show("feest");
+                burstConfetti();
+                window.setTimeout(burstConfetti, 350);
+            }
+            else {
+                clearSplitsFeedback();
+                newSplit();
+            }
+        }, 900);
+    }
+    function onSplitWrong() {
+        // Lief zijn: de sterrenrij blijft gewoon staan.
+        answerEl().className = "sbox answer filled wrong";
+        el.splitsFeedback.textContent = pick(TRIES);
+        el.splitsFeedback.className = "feedback bad";
+        el.splitsMascot.className = "mascot sad";
+        window.setTimeout(() => {
+            el.splitsMascot.className = "mascot";
+            splitsTyped = "";
+            updateSplitsBox();
+        }, 700);
+    }
+    // =====================================================================
+    // ===== Instellingen (Rekenreeksen) ===================================
+    // =====================================================================
+    function openSettings() {
+        el.maxRange.value = String(config.max);
+        el.maxValue.textContent = String(config.max);
+        el.opToggles.querySelectorAll(".op-toggle").forEach((btn) => {
+            const op = btn.dataset.op;
+            btn.classList.toggle("on", config.ops.indexOf(op) !== -1);
+        });
+        el.opHint.textContent = "";
+        el.settingsModal.hidden = false;
+    }
+    function closeSettings() {
+        const chosen = [];
+        el.opToggles.querySelectorAll(".op-toggle.on").forEach((btn) => {
+            const op = btn.dataset.op;
+            if (isOp(op))
+                chosen.push(op);
+        });
+        if (!chosen.length) {
+            el.opHint.textContent = HINT_MIN_ONE_OP;
+            return;
+        }
+        config.ops = chosen;
+        config.max = clampMax(el.maxRange.value);
+        saveConfig();
+        el.settingsModal.hidden = true;
+        // Nieuwe geldige som onder de nieuwe instellingen.
+        current = makeExercise(freshStart(config.max, config.ops));
+        typed = "";
+        clearFeedback();
+        render();
+    }
+    // =====================================================================
+    // ===== Events ========================================================
+    // =====================================================================
+    function wireNumpad(pad, handler) {
+        pad.addEventListener("click", (e) => {
+            const btn = e.target.closest(".key");
+            if (btn && btn.dataset.key)
+                handler(btn.dataset.key);
+        });
+    }
+    wireNumpad(el.numpad, onKey);
+    wireNumpad(el.splitsNumpad, onSplitsKey);
+    // Fysiek toetsenbord: naar het actieve spel sturen.
+    window.addEventListener("keydown", (e) => {
+        if (!el.settingsModal.hidden)
+            return;
+        const handler = active === "reeksen" ? onKey : active === "splits" ? onSplitsKey : null;
+        if (!handler)
+            return;
+        if (e.key >= "0" && e.key <= "9")
+            handler(e.key);
+        else if (e.key === "Enter" || e.key === "=")
+            handler("check");
+        else if (e.key === "Backspace") {
+            e.preventDefault();
+            handler("clear");
+        }
+    });
+    // Navigatie
+    el.btnReeksen.addEventListener("click", () => show("reeksen"));
+    el.btnSplitsen.addEventListener("click", () => show("splitsSetup"));
+    document.querySelectorAll(".js-home").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            el.homeMascot.textContent = pick(mascots);
+            show("home");
+        });
+    });
+    document.querySelectorAll(".js-settings").forEach((btn) => {
+        btn.addEventListener("click", openSettings);
+    });
+    // Splitsen: keuze van het topgetal
+    el.scrSplitsSetup.querySelectorAll(".numchoice").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const t = btn.dataset.total;
+            splitsChoice = t === "5" ? 5 : t === "10" ? 10 : "rnd";
+            resetSplitsRun();
+            show("splits");
+        });
+    });
+    el.btnAgain.addEventListener("click", () => {
+        resetSplitsRun();
+        show("splits");
+    });
+    el.btnOther.addEventListener("click", () => show("splitsSetup"));
+    el.closeSettings.addEventListener("click", closeSettings);
+    el.maxRange.addEventListener("input", () => {
+        el.maxValue.textContent = el.maxRange.value;
+    });
+    el.opToggles.addEventListener("click", (e) => {
+        const btn = e.target.closest(".op-toggle");
+        if (!btn)
+            return;
+        btn.classList.toggle("on");
+        el.opHint.textContent = "";
+    });
     const canvas = byId("confetti");
     const ctx = canvas.getContext("2d");
     const pieces = [];
@@ -290,7 +569,7 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (let i = pieces.length - 1; i >= 0; i--) {
             const p = pieces[i];
-            p.vy += 0.32; // gravity
+            p.vy += 0.32; // zwaartekracht
             p.x += p.vx;
             p.y += p.vy;
             p.rot += p.vr;
@@ -312,71 +591,10 @@
             rafId = null;
         }
     }
-    // ---------- Settings ----------
-    function openSettings() {
-        el.maxRange.value = String(config.max);
-        el.maxValue.textContent = String(config.max);
-        el.opToggles.querySelectorAll(".op-toggle").forEach((btn) => {
-            const op = btn.dataset.op;
-            btn.classList.toggle("on", config.ops.indexOf(op) !== -1);
-        });
-        el.opHint.textContent = "";
-        el.settingsModal.hidden = false;
-    }
-    function closeSettings() {
-        const chosen = [];
-        el.opToggles.querySelectorAll(".op-toggle.on").forEach((btn) => {
-            const op = btn.dataset.op;
-            if (isOp(op))
-                chosen.push(op);
-        });
-        if (!chosen.length) {
-            el.opHint.textContent = "Pick at least one kind of math! 🙂";
-            return;
-        }
-        config.ops = chosen;
-        config.max = clampMax(el.maxRange.value);
-        saveConfig();
-        el.settingsModal.hidden = true;
-        current = makeExercise(freshStart(config.max, config.ops));
-        typed = "";
-        clearFeedback();
-        render();
-    }
-    // ---------- Events ----------
-    el.numpad.addEventListener("click", (e) => {
-        const btn = e.target.closest(".key");
-        if (btn && btn.dataset.key)
-            onKey(btn.dataset.key);
-    });
-    window.addEventListener("keydown", (e) => {
-        if (!el.settingsModal.hidden)
-            return;
-        if (e.key >= "0" && e.key <= "9")
-            onKey(e.key);
-        else if (e.key === "Enter" || e.key === "=")
-            onKey("check");
-        else if (e.key === "Backspace") {
-            e.preventDefault();
-            onKey("clear");
-        }
-    });
-    el.settingsBtn.addEventListener("click", openSettings);
-    el.closeSettings.addEventListener("click", closeSettings);
-    el.maxRange.addEventListener("input", () => {
-        el.maxValue.textContent = el.maxRange.value;
-    });
-    el.opToggles.addEventListener("click", (e) => {
-        const btn = e.target.closest(".op-toggle");
-        if (!btn)
-            return;
-        btn.classList.toggle("on");
-        el.opHint.textContent = "";
-    });
-    // ---------- Disable zoom (iOS Safari) ----------
-    // touch-action: manipulation in CSS stops double-tap zoom (typing "11"
-    // quickly must never zoom); these guards stop pinch zoom too, since iOS
-    // ignores user-scalable=no in the viewport meta.
+    // ---------- Zoom uitschakelen (iOS Safari) ----------
+    // touch-action: manipulation in CSS stopt dubbeltik-zoom (snel "11" typen
+    // mag nooit zoomen); deze guards stoppen ook knijp-zoom, want iOS negeert
+    // user-scalable=no in de viewport-meta.
     document.addEventListener("gesturestart", (e) => e.preventDefault());
     document.addEventListener("touchmove", (e) => {
         if (e.touches.length > 1)
@@ -386,12 +604,14 @@
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
             navigator.serviceWorker.register("sw.js").catch(() => {
-                /* offline support is a progressive enhancement */
+                /* offline is een extraatje, geen vereiste */
             });
         });
     }
-    // ---------- Boot ----------
+    // ---------- Start ----------
     el.streakBox.classList.add("dim");
     current = makeExercise(freshStart(config.max, config.ops));
     render();
+    resetSplitsRun();
+    show("home");
 })();

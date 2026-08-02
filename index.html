@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#7c4dff" />
-  <title>Math Adventure 🚀</title>
+  <title>Rekenavontuur 🧮</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.webmanifest" />
@@ -12,27 +12,63 @@
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Math" />
+  <meta name="apple-mobile-web-app-title" content="Rekenen" />
   <meta name="mobile-web-app-capable" content="yes" />
 
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="app">
-    <!-- Top bar -->
+  <!-- ===== Keuzescherm ===== -->
+  <section id="scrHome" class="screen menu">
     <header class="topbar">
-      <div class="score" id="score" aria-label="Stars earned">
+      <div class="score" aria-label="Sterren">
         <span class="score-star">⭐</span>
-        <span id="scoreValue">0</span>
+        <span class="js-score">0</span>
       </div>
-      <div class="streak" id="streakBox" title="Streak">
+      <button class="icon-btn js-settings push-right" aria-label="Instellingen">⚙️</button>
+    </header>
+    <div class="menu-body">
+      <div class="mascot" id="homeMascot">🦄</div>
+      <h1 class="home-title">Rekenavontuur</h1>
+      <p class="home-sub">Wat wil je spelen?</p>
+      <div class="gamecards">
+        <button class="gamecard" id="btnReeksen">
+          <span class="gc-icon">🔗</span>
+          <span class="gc-name">Rekenreeksen</span>
+          <span class="gc-desc">Plus, min, keer en delen —<br>het antwoord telt door!</span>
+        </button>
+        <button class="gamecard" id="btnSplitsen">
+          <span class="gc-diagram" aria-hidden="true">
+            <svg viewBox="0 0 100 60" preserveAspectRatio="none">
+              <line x1="50" y1="16" x2="20" y2="48" vector-effect="non-scaling-stroke"></line>
+              <line x1="50" y1="16" x2="80" y2="48" vector-effect="non-scaling-stroke"></line>
+            </svg>
+            <span class="gd top">10</span>
+            <span class="gd left">4</span>
+            <span class="gd right">?</span>
+          </span>
+          <span class="gc-name">Splitsen</span>
+          <span class="gc-desc">Splits het getal in twee stukjes.<br>Haal jij 10 op een rij?</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Rekenreeksen ===== -->
+  <section id="scrReeksen" class="screen game" hidden>
+    <header class="topbar">
+      <button class="icon-btn js-home" aria-label="Naar het keuzescherm">🏠</button>
+      <div class="score" aria-label="Sterren">
+        <span class="score-star">⭐</span>
+        <span class="js-score">0</span>
+      </div>
+      <div class="streak" id="streakBox" title="Reeks">
         <span id="streakFlame">🔥</span>
         <span id="streakValue">0</span>
       </div>
-      <button class="icon-btn" id="settingsBtn" aria-label="Settings">⚙️</button>
+      <button class="icon-btn js-settings push-right" aria-label="Instellingen">⚙️</button>
     </header>
 
-    <!-- Play area -->
     <main class="play">
       <div class="mascot" id="mascot">🦄</div>
 
@@ -47,7 +83,6 @@
       <div class="feedback" id="feedback"></div>
     </main>
 
-    <!-- Numpad -->
     <section class="numpad" id="numpad">
       <button class="key num" data-key="1">1</button>
       <button class="key num" data-key="2">2</button>
@@ -58,19 +93,104 @@
       <button class="key num" data-key="7">7</button>
       <button class="key num" data-key="8">8</button>
       <button class="key num" data-key="9">9</button>
-      <button class="key action clear" data-key="clear" aria-label="Clear">⌫</button>
+      <button class="key action clear" data-key="clear" aria-label="Wissen">⌫</button>
       <button class="key num" data-key="0">0</button>
-      <button class="key action check" data-key="check" aria-label="Check answer">✓</button>
+      <button class="key action check" data-key="check" aria-label="Controleer antwoord">✓</button>
     </section>
-  </div>
+  </section>
 
-  <!-- Settings modal -->
+  <!-- ===== Splitsen · keuze ===== -->
+  <section id="scrSplitsSetup" class="screen menu" hidden>
+    <header class="topbar">
+      <button class="icon-btn js-home" aria-label="Naar het keuzescherm">🏠</button>
+      <div class="score push-right" aria-label="Sterren">
+        <span class="score-star">⭐</span>
+        <span class="js-score">0</span>
+      </div>
+    </header>
+    <div class="menu-body">
+      <div class="mascot">🐸</div>
+      <h2 class="bigq">Welk getal ga je splitsen?</h2>
+      <div class="numchoices">
+        <button class="numchoice c5" data-total="5">5</button>
+        <button class="numchoice c10" data-total="10">10</button>
+        <button class="numchoice rnd" data-total="rnd">?<small>verrassing</small></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Splitsen · spel ===== -->
+  <section id="scrSplits" class="screen game" hidden>
+    <header class="topbar">
+      <button class="icon-btn js-home" aria-label="Naar het keuzescherm">🏠</button>
+      <div class="score push-right" aria-label="Sterren">
+        <span class="score-star">⭐</span>
+        <span class="js-score">0</span>
+      </div>
+    </header>
+
+    <main class="play">
+      <div class="goalrow" id="goalRow" aria-label="Voortgang: 10 op een rij"></div>
+      <div class="mascot" id="splitsMascot">🐥</div>
+
+      <div class="splitwrap">
+        <div class="sbox top" id="splitsTop">10</div>
+        <svg class="legs" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="50" y1="6" x2="16" y2="94" vector-effect="non-scaling-stroke"></line>
+          <line x1="50" y1="6" x2="84" y2="94" vector-effect="non-scaling-stroke"></line>
+        </svg>
+        <div class="sbot">
+          <div class="sbox" id="boxLeft">4</div>
+          <div class="sbox" id="boxRight">?</div>
+        </div>
+      </div>
+
+      <div class="feedback" id="splitsFeedback"></div>
+    </main>
+
+    <section class="numpad" id="splitsNumpad">
+      <button class="key num" data-key="1">1</button>
+      <button class="key num" data-key="2">2</button>
+      <button class="key num" data-key="3">3</button>
+      <button class="key num" data-key="4">4</button>
+      <button class="key num" data-key="5">5</button>
+      <button class="key num" data-key="6">6</button>
+      <button class="key num" data-key="7">7</button>
+      <button class="key num" data-key="8">8</button>
+      <button class="key num" data-key="9">9</button>
+      <button class="key action clear" data-key="clear" aria-label="Wissen">⌫</button>
+      <button class="key num" data-key="0">0</button>
+      <button class="key action check" data-key="check" aria-label="Controleer antwoord">✓</button>
+    </section>
+  </section>
+
+  <!-- ===== Splitsen · feest ===== -->
+  <section id="scrFeest" class="screen menu" hidden>
+    <header class="topbar">
+      <button class="icon-btn js-home" aria-label="Naar het keuzescherm">🏠</button>
+      <div class="score push-right" aria-label="Sterren">
+        <span class="score-star">⭐</span>
+        <span class="js-score">0</span>
+      </div>
+    </header>
+    <div class="menu-body">
+      <div class="mascot festive">🏆</div>
+      <h2 class="bigq">10 op een rij!</h2>
+      <p class="home-sub">Jij bent een splitskampioen! 🎉</p>
+      <div class="numchoices">
+        <button class="numchoice again" id="btnAgain">Nog een keer! 🔁</button>
+        <button class="numchoice other" id="btnOther">Ander getal 🎲</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Instellingen (Rekenreeksen) ===== -->
   <div class="modal-overlay" id="settingsModal" hidden>
     <div class="modal">
-      <h2>Settings 🎛️</h2>
+      <h2>Instellingen 🎛️</h2>
 
       <div class="setting-block">
-        <label class="setting-label">How high do we go?</label>
+        <label class="setting-label">Hoe hoog gaan we?</label>
         <div class="slider-row">
           <input type="range" id="maxRange" min="5" max="100" step="1" value="20" />
           <span class="max-value" id="maxValue">20</span>
@@ -78,17 +198,17 @@
       </div>
 
       <div class="setting-block">
-        <label class="setting-label">Which math?</label>
+        <label class="setting-label">Welke sommen?</label>
         <div class="op-toggles" id="opToggles">
           <button class="op-toggle" data-op="+"><span class="op-emoji">➕</span>Plus</button>
-          <button class="op-toggle" data-op="-"><span class="op-emoji">➖</span>Minus</button>
-          <button class="op-toggle" data-op="*"><span class="op-emoji">✖️</span>Times</button>
-          <button class="op-toggle" data-op="/"><span class="op-emoji">➗</span>Divide</button>
+          <button class="op-toggle" data-op="-"><span class="op-emoji">➖</span>Min</button>
+          <button class="op-toggle" data-op="*"><span class="op-emoji">✖️</span>Keer</button>
+          <button class="op-toggle" data-op="/"><span class="op-emoji">➗</span>Delen</button>
         </div>
         <p class="hint" id="opHint"></p>
       </div>
 
-      <button class="big-btn" id="closeSettings">Let's play! 🎉</button>
+      <button class="big-btn" id="closeSettings">Spelen maar! 🎉</button>
     </div>
   </div>
 
