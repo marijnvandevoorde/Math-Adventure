@@ -29,13 +29,13 @@
     </header>
     <div class="menu-body">
       <div class="mascot" id="homeMascot">🦄</div>
-      <h1 class="home-title">Rekenavontuur</h1>
-      <p class="home-sub">Wat wil je spelen?</p>
+      <h1 class="home-title" id="homeTitle">Rekenavontuur</h1>
+      <p class="home-sub" id="homeSub">Wat wil je spelen?</p>
       <div class="gamecards">
         <button class="gamecard" id="btnReeksen">
           <span class="gc-icon">🔗</span>
-          <span class="gc-name">Rekenreeksen</span>
-          <span class="gc-desc">Plus, min, keer en delen —<br>het antwoord telt door!</span>
+          <span class="gc-name" id="gcReeksenName">Rekenreeksen</span>
+          <span class="gc-desc" id="gcReeksenDesc">Plus, min, keer en delen —<br>het antwoord telt door!</span>
         </button>
         <button class="gamecard" id="btnSplitsen">
           <span class="gc-diagram" aria-hidden="true">
@@ -47,8 +47,8 @@
             <span class="gd left">4</span>
             <span class="gd right">?</span>
           </span>
-          <span class="gc-name">Splitsen</span>
-          <span class="gc-desc">Splits het getal in twee stukjes.<br>Haal jij 10 op een rij?</span>
+          <span class="gc-name" id="gcSplitsName">Splitsen</span>
+          <span class="gc-desc" id="gcSplitsDesc">Splits het getal in twee stukjes.<br>Haal jij 10 op een rij?</span>
         </button>
       </div>
     </div>
@@ -110,11 +110,11 @@
     </header>
     <div class="menu-body">
       <div class="mascot">🐸</div>
-      <h2 class="bigq">Welk getal ga je splitsen?</h2>
+      <h2 class="bigq" id="splitsQ">Welk getal ga je splitsen?</h2>
       <div class="numchoices">
         <button class="numchoice c5" data-total="5">5</button>
         <button class="numchoice c10" data-total="10">10</button>
-        <button class="numchoice rnd" data-total="rnd">?<small>verrassing</small></button>
+        <button class="numchoice rnd" data-total="rnd">?<small id="rndLabel">verrassing</small></button>
       </div>
     </div>
   </section>
@@ -174,8 +174,8 @@
     </header>
     <div class="menu-body">
       <div class="mascot festive">🏆</div>
-      <h2 class="bigq">10 op een rij!</h2>
-      <p class="home-sub">Jij bent een splitskampioen! 🎉</p>
+      <h2 class="bigq" id="feestTitle">10 op een rij!</h2>
+      <p class="home-sub" id="feestSub">Jij bent een splitskampioen! 🎉</p>
       <div class="numchoices">
         <button class="numchoice again" id="btnAgain">Nog een keer! 🔁</button>
         <button class="numchoice other" id="btnOther">Ander getal 🎲</button>
@@ -186,10 +186,10 @@
   <!-- ===== Instellingen (Rekenreeksen) ===== -->
   <div class="modal-overlay" id="settingsModal" hidden>
     <div class="modal">
-      <h2>Instellingen 🎛️</h2>
+      <h2 id="settingsTitle">Instellingen 🎛️</h2>
 
       <div class="setting-block">
-        <label class="setting-label">Hoe hoog gaan we?</label>
+        <label class="setting-label" id="lblMax">Hoe hoog gaan we?</label>
         <div class="slider-row">
           <input type="range" id="maxRange" min="5" max="100" step="1" value="20" />
           <span class="max-value" id="maxValue">20</span>
@@ -197,14 +197,24 @@
       </div>
 
       <div class="setting-block">
-        <label class="setting-label">Welke sommen?</label>
+        <label class="setting-label" id="lblOps">Welke sommen?</label>
         <div class="op-toggles" id="opToggles">
-          <button class="op-toggle" data-op="+"><span class="op-emoji">➕</span>Plus</button>
-          <button class="op-toggle" data-op="-"><span class="op-emoji">➖</span>Min</button>
-          <button class="op-toggle" data-op="*"><span class="op-emoji">✖️</span>Keer</button>
-          <button class="op-toggle" data-op="/"><span class="op-emoji">➗</span>Delen</button>
+          <button class="op-toggle" data-op="+"><span class="op-emoji">➕</span><span class="op-name">Plus</span></button>
+          <button class="op-toggle" data-op="-"><span class="op-emoji">➖</span><span class="op-name">Min</span></button>
+          <button class="op-toggle" data-op="*"><span class="op-emoji">✖️</span><span class="op-name">Keer</span></button>
+          <button class="op-toggle" data-op="/"><span class="op-emoji">➗</span><span class="op-name">Delen</span></button>
         </div>
         <p class="hint" id="opHint"></p>
+      </div>
+
+      <div class="setting-block">
+        <label class="setting-label" id="lblLang">Taal</label>
+        <div class="lang-toggles" id="langToggles">
+          <button class="lang-toggle" data-lang="nl"><span class="lang-flag">🇳🇱</span>NL</button>
+          <button class="lang-toggle" data-lang="en"><span class="lang-flag">🇬🇧</span>EN</button>
+          <button class="lang-toggle" data-lang="fr"><span class="lang-flag">🇫🇷</span>FR</button>
+          <button class="lang-toggle" data-lang="es"><span class="lang-flag">🇪🇸</span>ES</button>
+        </div>
       </div>
 
       <button class="big-btn" id="closeSettings">Spelen maar! 🎉</button>

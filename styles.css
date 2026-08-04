@@ -252,6 +252,8 @@ body { background: transparent; }
   padding: 24px 22px 22px;
   width: 100%;
   max-width: 420px;
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
   box-shadow: 0 12px 0 rgba(0, 0, 0, 0.15);
   animation: pop-in 0.3s ease;
 }
@@ -659,3 +661,35 @@ input[type="range"]::-moz-range-thumb {
   .splitwrap { width: 400px; }
   .gamecards, .numchoices { max-width: 460px; }
 }
+
+/* ===== Taalkeuze in instellingen ===== */
+.lang-toggles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.lang-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border: 4px solid #e7e0ff;
+  background: #faf8ff;
+  border-radius: 16px;
+  padding: 8px 4px;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: inherit;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.1s;
+  opacity: 0.55;
+}
+.lang-flag { font-size: 24px; line-height: 1; }
+.lang-toggle.on {
+  opacity: 1;
+  border-color: var(--green);
+  background: #eafff2;
+  box-shadow: 0 4px 0 rgba(46, 204, 113, 0.35);
+}
+.lang-toggle:active { transform: scale(0.95); }

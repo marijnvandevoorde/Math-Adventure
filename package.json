@@ -9,7 +9,8 @@
     "watch": "tsc -w -p tsconfig.json",
     "icons": "node scripts/build-icons.cjs",
     "serve": "node scripts/serve.cjs",
-    "start": "npm run build && npm run serve"
+    "start": "npm run build && npm run serve",
+    "build:dist": "npm run build && node scripts/build-dist.cjs"
   },
   "devDependencies": {
     "typescript": "^5.4.0"

@@ -9,15 +9,137 @@
 (() => {
   "use strict";
 
-  // ---------- Teksten (Nederlands) ----------
-  const CHEERS = ["Super! 🎉", "Goed zo! ⭐", "Klasse! 🤩", "Ja! 🚀", "Geweldig! 🌈", "Briljant! 💎", "Joepie! 🎊"];
-  const TRIES = ["Probeer nog eens! 💪", "Bijna! 🙂", "Net niet — jij kan dit!", "Ga zo door! ✨"];
-  const HINT_MIN_ONE_OP = "Kies minstens één soort som! 🙂";
+  // ---------- Talen ----------
+  type Lang = "nl" | "en" | "fr" | "es";
+
+  interface Strings {
+    title: string;
+    homeSub: string;
+    reeksenName: string;
+    reeksenDesc: string; // mag <br> bevatten
+    splitsName: string;
+    splitsDesc: string;
+    settingsTitle: string;
+    lblMax: string;
+    lblOps: string;
+    opNames: Record<"+" | "-" | "*" | "/", string>;
+    lblLang: string;
+    play: string;
+    hintMinOne: string;
+    splitsQ: string;
+    surprise: string;
+    feestTitle: string;
+    feestSub: string;
+    again: string;
+    other: string;
+    cheers: string[];
+    tries: string[];
+  }
+
+  const I18N: Record<Lang, Strings> = {
+    nl: {
+      title: "Rekenavontuur",
+      homeSub: "Wat wil je spelen?",
+      reeksenName: "Rekenreeksen",
+      reeksenDesc: "Plus, min, keer en delen —<br>het antwoord telt door!",
+      splitsName: "Splitsen",
+      splitsDesc: "Splits het getal in twee stukjes.<br>Haal jij 10 op een rij?",
+      settingsTitle: "Instellingen 🎛️",
+      lblMax: "Hoe hoog gaan we?",
+      lblOps: "Welke sommen?",
+      opNames: { "+": "Plus", "-": "Min", "*": "Keer", "/": "Delen" },
+      lblLang: "Taal",
+      play: "Spelen maar! 🎉",
+      hintMinOne: "Kies minstens één soort som! 🙂",
+      splitsQ: "Welk getal ga je splitsen?",
+      surprise: "verrassing",
+      feestTitle: "10 op een rij!",
+      feestSub: "Jij bent een splitskampioen! 🎉",
+      again: "Nog een keer! 🔁",
+      other: "Ander getal 🎲",
+      cheers: ["Super! 🎉", "Goed zo! ⭐", "Klasse! 🤩", "Ja! 🚀", "Geweldig! 🌈", "Briljant! 💎", "Joepie! 🎊"],
+      tries: ["Probeer nog eens! 💪", "Bijna! 🙂", "Net niet — jij kan dit!", "Ga zo door! ✨"],
+    },
+    en: {
+      title: "Math Adventure",
+      homeSub: "What do you want to play?",
+      reeksenName: "Number Chains",
+      reeksenDesc: "Add, subtract, multiply, divide —<br>the answer carries on!",
+      splitsName: "Number Bonds",
+      splitsDesc: "Split the number into two parts.<br>Can you get 10 in a row?",
+      settingsTitle: "Settings 🎛️",
+      lblMax: "How high do we go?",
+      lblOps: "Which sums?",
+      opNames: { "+": "Plus", "-": "Minus", "*": "Times", "/": "Divide" },
+      lblLang: "Language",
+      play: "Let's play! 🎉",
+      hintMinOne: "Pick at least one kind of sum! 🙂",
+      splitsQ: "Which number will you split?",
+      surprise: "surprise",
+      feestTitle: "10 in a row!",
+      feestSub: "You're a number bonds champion! 🎉",
+      again: "Again! 🔁",
+      other: "Different number 🎲",
+      cheers: ["Awesome! 🎉", "Well done! ⭐", "Great! 🤩", "Yes! 🚀", "Amazing! 🌈", "Brilliant! 💎", "Woohoo! 🎊"],
+      tries: ["Try again! 💪", "Almost! 🙂", "Not quite — you've got this!", "Keep going! ✨"],
+    },
+    fr: {
+      title: "Aventure des maths",
+      homeSub: "À quoi veux-tu jouer ?",
+      reeksenName: "Chaînes de calcul",
+      reeksenDesc: "Plus, moins, fois et divisé —<br>la réponse continue !",
+      splitsName: "Décomposition",
+      splitsDesc: "Coupe le nombre en deux parties.<br>Réussis 10 à la suite !",
+      settingsTitle: "Réglages 🎛️",
+      lblMax: "Jusqu'à combien ?",
+      lblOps: "Quels calculs ?",
+      opNames: { "+": "Plus", "-": "Moins", "*": "Fois", "/": "Divisé" },
+      lblLang: "Langue",
+      play: "On joue ! 🎉",
+      hintMinOne: "Choisis au moins un type de calcul ! 🙂",
+      splitsQ: "Quel nombre veux-tu décomposer ?",
+      surprise: "surprise",
+      feestTitle: "10 à la suite !",
+      feestSub: "Champion de la décomposition ! 🎉",
+      again: "Encore ! 🔁",
+      other: "Autre nombre 🎲",
+      cheers: ["Super ! 🎉", "Bravo ! ⭐", "Génial ! 🤩", "Oui ! 🚀", "Formidable ! 🌈", "Brillant ! 💎", "Youpi ! 🎊"],
+      tries: ["Essaie encore ! 💪", "Presque ! 🙂", "Pas tout à fait — tu peux le faire !", "Continue ! ✨"],
+    },
+    es: {
+      title: "Aventura matemática",
+      homeSub: "¿A qué quieres jugar?",
+      reeksenName: "Cadenas de cálculo",
+      reeksenDesc: "Suma, resta, por y entre —<br>¡la respuesta continúa!",
+      splitsName: "Descomponer",
+      splitsDesc: "Divide el número en dos partes.<br>¿Logras 10 seguidos?",
+      settingsTitle: "Ajustes 🎛️",
+      lblMax: "¿Hasta qué número?",
+      lblOps: "¿Qué cuentas?",
+      opNames: { "+": "Más", "-": "Menos", "*": "Por", "/": "Entre" },
+      lblLang: "Idioma",
+      play: "¡A jugar! 🎉",
+      hintMinOne: "¡Elige al menos un tipo de cuenta! 🙂",
+      splitsQ: "¿Qué número vas a descomponer?",
+      surprise: "sorpresa",
+      feestTitle: "¡10 seguidos!",
+      feestSub: "¡Eres un campeón! 🎉",
+      again: "¡Otra vez! 🔁",
+      other: "Otro número 🎲",
+      cheers: ["¡Genial! 🎉", "¡Muy bien! ⭐", "¡Fantástico! 🤩", "¡Sí! 🚀", "¡Increíble! 🌈", "¡Brillante! 💎", "¡Yupi! 🎊"],
+      tries: ["¡Inténtalo otra vez! 💪", "¡Casi! 🙂", "Aún no… ¡tú puedes!", "¡Sigue así! ✨"],
+    },
+  };
+
+  function isLang(v: unknown): v is Lang {
+    return v === "nl" || v === "en" || v === "fr" || v === "es";
+  }
 
   type Op = "+" | "-" | "*" | "/";
   interface Config {
     max: number;
     ops: Op[];
+    lang: Lang;
   }
   interface Move {
     op: Op;
@@ -32,7 +154,7 @@
   }
 
   // ---------- Config (bewaard in localStorage) ----------
-  const DEFAULTS: Config = { max: 20, ops: ["+", "-"] };
+  const DEFAULTS: Config = { max: 20, ops: ["+", "-"], lang: "nl" };
   const config: Config = loadConfig();
 
   function isOp(o: unknown): o is Op {
@@ -52,12 +174,13 @@
         return {
           max: clampMax(c.max),
           ops: ops.length ? ops : DEFAULTS.ops.slice(),
+          lang: isLang(c.lang) ? c.lang : DEFAULTS.lang,
         };
       }
     } catch (e) {
       /* kapotte opslag negeren */
     }
-    return { max: DEFAULTS.max, ops: DEFAULTS.ops.slice() };
+    return { max: DEFAULTS.max, ops: DEFAULTS.ops.slice(), lang: DEFAULTS.lang };
   }
   function saveConfig(): void {
     try {
@@ -85,6 +208,12 @@
     btnReeksen: byId("btnReeksen"),
     btnSplitsen: byId("btnSplitsen"),
     homeMascot: byId("homeMascot"),
+    homeTitle: byId("homeTitle"),
+    homeSub: byId("homeSub"),
+    gcReeksenName: byId("gcReeksenName"),
+    gcReeksenDesc: byId("gcReeksenDesc"),
+    gcSplitsName: byId("gcSplitsName"),
+    gcSplitsDesc: byId("gcSplitsDesc"),
     // rekenreeksen
     opA: byId("opA"),
     operator: byId("operator"),
@@ -105,6 +234,10 @@
     splitsNumpad: byId("splitsNumpad"),
     btnAgain: byId("btnAgain"),
     btnOther: byId("btnOther"),
+    splitsQ: byId("splitsQ"),
+    rndLabel: byId("rndLabel"),
+    feestTitle: byId("feestTitle"),
+    feestSub: byId("feestSub"),
     // instellingen
     settingsModal: byId("settingsModal"),
     closeSettings: byId("closeSettings"),
@@ -112,7 +245,48 @@
     maxValue: byId("maxValue"),
     opToggles: byId("opToggles"),
     opHint: byId("opHint"),
+    settingsTitle: byId("settingsTitle"),
+    lblMax: byId("lblMax"),
+    lblOps: byId("lblOps"),
+    lblLang: byId("lblLang"),
+    langToggles: byId("langToggles"),
   };
+
+  // ---------- Actieve taal ----------
+  function L(): Strings {
+    return I18N[config.lang];
+  }
+
+  function applyLang(): void {
+    const t = L();
+    document.documentElement.lang = config.lang;
+    document.title = t.title + " 🧮";
+    el.homeTitle.textContent = t.title;
+    el.homeSub.textContent = t.homeSub;
+    el.gcReeksenName.textContent = t.reeksenName;
+    el.gcReeksenDesc.innerHTML = t.reeksenDesc;
+    el.gcSplitsName.textContent = t.splitsName;
+    el.gcSplitsDesc.innerHTML = t.splitsDesc;
+    el.settingsTitle.textContent = t.settingsTitle;
+    el.lblMax.textContent = t.lblMax;
+    el.lblOps.textContent = t.lblOps;
+    el.lblLang.textContent = t.lblLang;
+    el.closeSettings.textContent = t.play;
+    el.opToggles.querySelectorAll<HTMLElement>(".op-toggle").forEach((btn) => {
+      const op = btn.dataset.op;
+      const name = btn.querySelector<HTMLElement>(".op-name");
+      if (isOp(op) && name) name.textContent = t.opNames[op];
+    });
+    el.langToggles.querySelectorAll<HTMLElement>(".lang-toggle").forEach((btn) => {
+      btn.classList.toggle("on", btn.dataset.lang === config.lang);
+    });
+    el.splitsQ.textContent = t.splitsQ;
+    el.rndLabel.textContent = t.surprise;
+    el.feestTitle.textContent = t.feestTitle;
+    el.feestSub.textContent = t.feestSub;
+    el.btnAgain.textContent = t.again;
+    el.btnOther.textContent = t.other;
+  }
 
   const mascots = ["🦄", "🐢", "🐰", "🦊", "🐼", "🐸", "🐥", "🐙", "🦖", "🐳"];
   const opSymbol: Record<Op, string> = { "+": "+", "-": "−", "*": "×", "/": "÷" };
@@ -269,7 +443,7 @@
     el.streakBox.classList.toggle("dim", streak === 0);
 
     el.answerBox.className = "answer-box filled correct";
-    el.feedback.textContent = pick(CHEERS);
+    el.feedback.textContent = pick(L().cheers);
     el.feedback.className = "feedback good";
     el.mascot.className = "mascot happy";
     burstConfetti();
@@ -290,7 +464,7 @@
     el.streakValue.textContent = String(streak);
     el.streakBox.classList.add("dim");
     el.answerBox.className = "answer-box filled wrong";
-    el.feedback.textContent = pick(TRIES);
+    el.feedback.textContent = pick(L().tries);
     el.feedback.className = "feedback bad";
     el.mascot.className = "mascot sad";
     window.setTimeout(() => {
@@ -471,7 +645,7 @@
     renderCount();
 
     answerEl().className = "sbox answer filled ok";
-    el.splitsFeedback.textContent = pick(CHEERS);
+    el.splitsFeedback.textContent = pick(L().cheers);
     el.splitsFeedback.className = "feedback good";
     el.splitsMascot.className = "mascot happy";
     burstConfetti();
@@ -494,7 +668,7 @@
   function onSplitWrong(): void {
     // Lief zijn: de sterrenrij blijft gewoon staan.
     answerEl().className = "sbox answer filled wrong";
-    el.splitsFeedback.textContent = pick(TRIES);
+    el.splitsFeedback.textContent = pick(L().tries);
     el.splitsFeedback.className = "feedback bad";
     el.splitsMascot.className = "mascot sad";
     window.setTimeout(() => {
@@ -526,7 +700,7 @@
       if (isOp(op)) chosen.push(op);
     });
     if (!chosen.length) {
-      el.opHint.textContent = HINT_MIN_ONE_OP;
+      el.opHint.textContent = L().hintMinOne;
       return;
     }
     config.ops = chosen;
@@ -598,6 +772,16 @@
   el.closeSettings.addEventListener("click", closeSettings);
   el.maxRange.addEventListener("input", () => {
     el.maxValue.textContent = el.maxRange.value;
+  });
+  // Taalkeuze: meteen toepassen én bewaren.
+  el.langToggles.addEventListener("click", (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>(".lang-toggle");
+    if (!btn) return;
+    const lang = btn.dataset.lang;
+    if (!isLang(lang) || lang === config.lang) return;
+    config.lang = lang;
+    saveConfig();
+    applyLang();
   });
   el.opToggles.addEventListener("click", (e) => {
     const btn = (e.target as HTMLElement).closest<HTMLElement>(".op-toggle");
@@ -690,6 +874,7 @@
   }
 
   // ---------- Start ----------
+  applyLang();
   el.streakBox.classList.add("dim");
   current = makeExercise(freshStart(config.max, config.ops));
   render();
