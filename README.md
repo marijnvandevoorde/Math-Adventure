@@ -1,9 +1,11 @@
 # Rekenavontuur 🧮🚀
 
 A colorful, **installable** arithmetic practice app for children aged
-**6–9**, with a **Dutch** interface. Written in **pure TypeScript**, works
-**fully offline** as a PWA, and is **responsive** for phone and iPad
-(portrait & landscape).
+**6–9**, in **Dutch, English, French or Spanish** (switchable in the
+settings). Written in **pure TypeScript**, works **fully offline** as a
+PWA, and is **responsive** for phone and iPad (portrait & landscape).
+
+### ▶️ Play it: **<https://math-adventures.small-victories.co/>**
 
 ![ages](https://img.shields.io/badge/leeftijd-6--9-ff6bcb) ![pwa](https://img.shields.io/badge/PWA-offline-2ecc71) ![typescript](https://img.shields.io/badge/TypeScript-strict-4d9dff)
 
