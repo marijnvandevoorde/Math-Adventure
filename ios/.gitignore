@@ -1,0 +1,8 @@
+build/
+build-rel/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# Synced from ../dist by the "Sync web app build" phase — never edit by hand.
+Rekenavontuur/www/
