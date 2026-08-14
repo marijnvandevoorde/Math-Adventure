@@ -122,5 +122,24 @@ math-practice/
 │   └── build-icons.cjs     # re-rasterize the SVG icon → PNGs
 ├── tsconfig.json           # app compile config
 ├── tsconfig.sw.json        # service-worker compile config
-└── package.json
+├── package.json
+├── android/                # Play Store wrapper (Java + WebView)
+├── ios/                    # App Store wrapper (Objective-C + WKWebView)
+└── store/                  # listings, graphics, screenshots, submission guide
 ```
+
+## Native apps
+
+The same web build also ships as a native app on both stores. Neither wrapper
+reimplements anything: they bundle `dist/` inside the app package and serve it
+locally, so the games work with no network at all — the Android build does not
+even declare the `INTERNET` permission.
+
+```sh
+npm run build:dist                              # always build the web app first
+cd android && ./gradlew :app:bundleRelease      # → app-release.aab
+cd ios && open Rekenavontuur.xcodeproj          # archive from Xcode
+```
+
+Store copy, graphics, 165 generated screenshots and a step-by-step submission
+guide live in [`store/`](store/README.md).
