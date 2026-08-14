@@ -2,3 +2,11 @@ node_modules/
 *.log
 .DS_Store
 dist/
+
+# Generated store screenshots: ~260 MB of retina PNGs, and every one of them is
+# reproducible from store/screenshots/capture-android.sh / capture-ios.sh. The
+# capture scripts and scenes.js next to them ARE tracked — only the output is
+# ignored, so these paths are anchored rather than a bare `android/`/`ios/`
+# (which would also swallow the app wrappers at the repo root).
+store/screenshots/android/
+store/screenshots/ios/
