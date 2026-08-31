@@ -17,8 +17,8 @@ set -euo pipefail
 
 HERE=${0:A:h}
 ROOT=${HERE:h:h}
-PROJ=$ROOT/ios/Rekenavontuur.xcodeproj
-BUNDLE_ID=co.smallvictories.rekenavontuur
+PROJ=$ROOT/ios/MathAdventure.xcodeproj
+BUNDLE_ID=co.smallvictories.mathadventure
 OUT=$HERE/ios
 DERIVED=$ROOT/ios/build
 SCENE_TIMEOUT=45
@@ -45,10 +45,10 @@ SCENE_LIB=$(base64 < "$HERE/scenes.js" | tr -d '\n')
 
 echo "==> Building the app"
 (cd "$ROOT" && npm run build:dist >/dev/null)
-xcodebuild -project "$PROJ" -scheme Rekenavontuur -configuration Debug \
+xcodebuild -project "$PROJ" -scheme MathAdventure -configuration Debug \
   -destination 'generic/platform=iOS Simulator' -derivedDataPath "$DERIVED" \
   CODE_SIGNING_ALLOWED=NO build >/dev/null
-APP=$DERIVED/Build/Products/Debug-iphonesimulator/Rekenavontuur.app
+APP=$DERIVED/Build/Products/Debug-iphonesimulator/MathAdventure.app
 [[ -d $APP ]] || { echo "Build produced no app bundle." >&2; exit 1; }
 
 # Resolve a simulator name to a udid, preferring the newest runtime it exists on.

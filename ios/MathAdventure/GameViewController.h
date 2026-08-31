@@ -2,7 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// Full-screen host for the bundled Rekenavontuur web app.
+/// Full-screen host for the bundled Math Adventure web app.
 @interface GameViewController : UIViewController
 @end
 

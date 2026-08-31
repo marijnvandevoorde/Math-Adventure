@@ -1,7 +1,7 @@
 #import "AppAssetSchemeHandler.h"
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
-static NSString *const kScheme = @"rekenavontuur";
+static NSString *const kScheme = @"mathadventure";
 static NSString *const kHost = @"app";
 
 @implementation AppAssetSchemeHandler {

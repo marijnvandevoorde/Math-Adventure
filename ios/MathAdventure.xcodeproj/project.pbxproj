@@ -24,7 +24,7 @@
 		A10002010000000000000007 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A10002010000000000000008 /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
 		A10002010000000000000009 /* AppAssetSchemeHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppAssetSchemeHandler.h; sourceTree = "<group>"; };
-		A1000201000000000000000A /* Rekenavontuur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rekenavontuur.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000201000000000000000A /* MathAdventure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathAdventure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,12 +41,12 @@
 		A10004010000000000000001 = {
 			isa = PBXGroup;
 			children = (
-				A10004010000000000000002 /* Rekenavontuur */,
+				A10004010000000000000002 /* MathAdventure */,
 				A10004010000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		A10004010000000000000002 /* Rekenavontuur */ = {
+		A10004010000000000000002 /* MathAdventure */ = {
 			isa = PBXGroup;
 			children = (
 				A10002010000000000000007 /* AppDelegate.h */,
@@ -59,13 +59,13 @@
 				A10002010000000000000004 /* Assets.xcassets */,
 				A10002010000000000000005 /* Info.plist */,
 			);
-			path = Rekenavontuur;
+			path = MathAdventure;
 			sourceTree = "<group>";
 		};
 		A10004010000000000000003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A1000201000000000000000A /* Rekenavontuur.app */,
+				A1000201000000000000000A /* MathAdventure.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,9 +73,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A10005010000000000000001 /* Rekenavontuur */ = {
+		A10005010000000000000001 /* MathAdventure */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A10009010000000000000002 /* Build configuration list for PBXNativeTarget "Rekenavontuur" */;
+			buildConfigurationList = A10009010000000000000002 /* Build configuration list for PBXNativeTarget "MathAdventure" */;
 			buildPhases = (
 				A10007010000000000000001 /* Sync web app build */,
 				A10006010000000000000001 /* Sources */,
@@ -86,9 +86,9 @@
 			);
 			dependencies = (
 			);
-			name = Rekenavontuur;
-			productName = Rekenavontuur;
-			productReference = A1000201000000000000000A /* Rekenavontuur.app */;
+			name = MathAdventure;
+			productName = MathAdventure;
+			productReference = A1000201000000000000000A /* MathAdventure.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -106,7 +106,7 @@
 					};
 				};
 			};
-			buildConfigurationList = A10009010000000000000001 /* Build configuration list for PBXProject "Rekenavontuur" */;
+			buildConfigurationList = A10009010000000000000001 /* Build configuration list for PBXProject "MathAdventure" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = nl;
 			hasScannedForEncodings = 0;
@@ -122,7 +122,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A10005010000000000000001 /* Rekenavontuur */,
+				A10005010000000000000001 /* MathAdventure */,
 			);
 		};
 /* End PBXProject section */
@@ -216,15 +216,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3N255MYKM5;
+				DEVELOPMENT_TEAM = FJJGF7K8JG;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = Rekenavontuur/Info.plist;
+				INFOPLIST_FILE = MathAdventure/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = co.smallvictories.rekenavontuur;
+				PRODUCT_BUNDLE_IDENTIFIER = co.smallvictories.mathadventure;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -236,15 +236,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3N255MYKM5;
+				DEVELOPMENT_TEAM = FJJGF7K8JG;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = Rekenavontuur/Info.plist;
+				INFOPLIST_FILE = MathAdventure/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = co.smallvictories.rekenavontuur;
+				PRODUCT_BUNDLE_IDENTIFIER = co.smallvictories.mathadventure;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -253,7 +253,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A10009010000000000000001 /* Build configuration list for PBXProject "Rekenavontuur" */ = {
+		A10009010000000000000001 /* Build configuration list for PBXProject "MathAdventure" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A1000B010000000000000001 /* Debug */,
@@ -262,7 +262,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A10009010000000000000002 /* Build configuration list for PBXNativeTarget "Rekenavontuur" */ = {
+		A10009010000000000000002 /* Build configuration list for PBXNativeTarget "MathAdventure" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A1000B010000000000000003 /* Debug */,

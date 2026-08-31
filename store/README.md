@@ -10,7 +10,7 @@ screenshots, and the compliance answers. The apps themselves live in
 | --- | --- | --- |
 | Shell | Java + `WebView` | Objective-C + `WKWebView` |
 | Web app | bundled in the binary, served from `assets/www` | bundled in the binary, served from `www/` |
-| Serves over | `https://appassets.androidplatform.net/` | `rekenavontuur://app/` |
+| Serves over | `https://appassets.androidplatform.net/` | `mathadventure://app/` |
 | Network access | **none** — no `INTERNET` permission is declared | **none** — no requests are made |
 | Minimum OS | Android 7.0 (API 24) | iOS 15.0 |
 | Target | API 36 | iOS 26 SDK |
@@ -189,7 +189,7 @@ Play Console → *Create app*.
 | App or game | **Game** (it is a game; Education is still the category) |
 | Free or paid | **Paid** |
 
-> The **package name is `co.smallvictories.rekenavontuur` and is permanent.**
+> The **package name is `co.smallvictories.mathadventure` and is permanent.**
 > Once an app with that name is published it can never be renamed or reused.
 > If you want something different, change `applicationId` in
 > `android/app/build.gradle.kts` and `namespace` to match — but do it *now*.
@@ -243,29 +243,30 @@ testers before production is unlocked.
 
 ### 2. Set your team in the Xcode project
 
-`DEVELOPMENT_TEAM` is intentionally blank. Either set it in Xcode (*Signing &
-Capabilities* → Team, with *Automatically manage signing* on), or put your Team
-ID into both target configurations in
-`ios/Rekenavontuur.xcodeproj/project.pbxproj`.
+`DEVELOPMENT_TEAM` is already set to `FJJGF7K8JG` ("Small Victories") in both
+target configurations of `ios/MathAdventure.xcodeproj/project.pbxproj`. If you
+ever sign under a different team, change it there or in Xcode (*Signing &
+Capabilities* → Team, with *Automatically manage signing* on).
 
-The bundle identifier is `co.smallvictories.rekenavontuur`, matching Android. As
-on Play it is permanent once used — change it now if you want something else.
+The bundle identifier is `co.smallvictories.mathadventure`, matching the Play
+`applicationId`, and the display name is "Math Adventure" on both stores. As on
+Play it is permanent once used — change it now if you want something else.
 
 ### 3. Register the app
 
 - [ ] <https://developer.apple.com/account/resources/identifiers> → register the
-      App ID `co.smallvictories.rekenavontuur`. No capabilities needed.
+      App ID `co.smallvictories.mathadventure`. No capabilities needed.
 - [ ] App Store Connect → *My Apps → +* → New App. Platform iOS, Dutch as
-      primary language, SKU anything (e.g. `rekenavontuur-1`).
+      primary language, SKU anything (e.g. `mathadventure-1`).
 
 ### 4. Archive and upload
 
 ```sh
 npm run build:dist                       # from the repo root
 cd ios
-xcodebuild -project Rekenavontuur.xcodeproj -scheme Rekenavontuur \
+xcodebuild -project MathAdventure.xcodeproj -scheme MathAdventure \
   -configuration Release -destination 'generic/platform=iOS' \
-  -archivePath build/Rekenavontuur.xcarchive archive
+  -archivePath build/MathAdventure.xcarchive archive
 ```
 
 Then Xcode → *Window → Organizer* → *Distribute App → App Store Connect*. This

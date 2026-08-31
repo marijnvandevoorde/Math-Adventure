@@ -5,7 +5,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>nl</string>
     <key>CFBundleDisplayName</key>
-    <string>Rekenavontuur</string>
+    <string>Math Adventure</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>

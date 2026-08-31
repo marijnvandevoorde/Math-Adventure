@@ -138,7 +138,7 @@ even declare the `INTERNET` permission.
 ```sh
 npm run build:dist                              # always build the web app first
 cd android && ./gradlew :app:bundleRelease      # → app-release.aab
-cd ios && open Rekenavontuur.xcodeproj          # archive from Xcode
+cd ios && open MathAdventure.xcodeproj          # archive from Xcode
 ```
 
 Store copy, graphics, 165 generated screenshots and a step-by-step submission
