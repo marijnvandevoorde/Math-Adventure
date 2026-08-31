@@ -14,6 +14,8 @@ const DIST = path.join(ROOT, "dist");
 
 const ITEMS = [
   "index.html",
+  "privacy.html",
+  "support.html",
   "styles.css",
   "app.js",
   "sw.js",
