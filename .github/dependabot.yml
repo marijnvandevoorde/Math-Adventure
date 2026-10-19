@@ -34,3 +34,17 @@ updates:
         update-types:
           - "minor"
           - "patch"
+
+  # Android wrapper: Android Gradle Plugin and the Gradle wrapper.
+  - package-ecosystem: "gradle"
+    directory: "/android"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      gradle-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"

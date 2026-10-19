@@ -1,9 +1,8 @@
 name: Deploy to GitHub Pages
 
 # Builds the TypeScript and publishes the app (repo root) to GitHub Pages.
+# Manual only: run it from the Actions tab.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
