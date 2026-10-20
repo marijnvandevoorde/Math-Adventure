@@ -88,6 +88,6 @@ kunnen.
 | **App-categorie** | Educatie (`Education`) |
 | **Tags** | Rekenen / Onderwijs, Voor het hele gezin |
 | **E-mailadres contact** | `hello@small-victories.co` |
-| **Website** | `https://math-adventures.small-victories.co/` |
+| **Website** | `https://small-victories.co/` |
 | **Privacybeleid-URL** | `https://marijnvandevoorde.github.io/Math-Adventure/privacy.html` |
 | **Prijs** | €0,89 / $0,89 — zie wel de opmerking over prijsdrempels in `store/README.md` |

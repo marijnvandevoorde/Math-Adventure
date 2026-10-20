@@ -1,0 +1,4 @@
+# Cloudflare Pages response headers (copied into dist/ by build-dist.cjs).
+# The web version is unlisted: keep every response out of search engines.
+/*
+  X-Robots-Tag: noindex, nofollow

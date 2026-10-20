@@ -86,6 +86,6 @@ hands.
 | **App category** | Education |
 | **Tags** | Maths / Education, Family friendly |
 | **Contact email** | `hello@small-victories.co` |
-| **Website** | `https://math-adventures.small-victories.co/` |
+| **Website** | `https://small-victories.co/` |
 | **Privacy policy URL** | `https://marijnvandevoorde.github.io/Math-Adventure/privacy.html` |
 | **Price** | €0.89 / $0.89 — but see the price-floor note in `store/README.md` |

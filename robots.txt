@@ -1,0 +1,4 @@
+# The web version of Rekenavontuur / Math Adventure is unlisted; get it from
+# the App Store or Google Play.
+User-agent: *
+Disallow: /

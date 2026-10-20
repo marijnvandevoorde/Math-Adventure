@@ -98,5 +98,5 @@ rekenen,rekenspel,splitsen,tafels,optellen,aftrekken,kinderen,groep3,groep4,wisk
 ## Marketing-URL  (optioneel)
 
 ```
-https://math-adventures.small-victories.co/
+https://small-victories.co/
 ```
