@@ -93,7 +93,15 @@ rekenen,rekenspel,splitsen,tafels,optellen,aftrekken,kinderen,groep3,groep4,wisk
 
 ## Ondersteunings-URL  (verplicht)
 
-⚠️ IN TE VULLEN — App Store weigert de inzending zonder werkende supportpagina.
+```
+https://small-victories.co/contact
+```
+
+## Privacybeleid-URL  (verplicht)
+
+```
+https://small-victories.co/projects/math-adventure/privacy
+```
 
 ## Marketing-URL  (optioneel)
 
