@@ -5,7 +5,12 @@ A colorful, **installable** arithmetic practice app for children aged
 settings). Written in **pure TypeScript**, works **fully offline** as a
 PWA, and is **responsive** for phone and iPad (portrait & landscape).
 
-### ▶️ Play it: **<https://math-adventures.small-victories.co/>**
+### ▶️ Get it on the [App Store](https://apps.apple.com/app/id6807180588) or [Google Play](https://play.google.com/store/apps/details?id=co.smallvictories.mathadventure)
+
+The web version stays online but is **unlisted**: `index.html` carries a
+`noindex, nofollow` robots meta tag, `_headers` adds `X-Robots-Tag` on
+Cloudflare Pages, and `robots.txt` disallows everything. Don't add a sitemap,
+canonical or `og:url`, or links to the web URL.
 
 ![ages](https://img.shields.io/badge/leeftijd-6--9-ff6bcb) ![pwa](https://img.shields.io/badge/PWA-offline-2ecc71) ![typescript](https://img.shields.io/badge/TypeScript-strict-4d9dff)
 

@@ -19,6 +19,8 @@ const ITEMS = [
   "sw.js",
   "manifest.webmanifest",
   "icons",
+  "robots.txt",
+  "_headers",
 ];
 
 fs.rmSync(DIST, { recursive: true, force: true });

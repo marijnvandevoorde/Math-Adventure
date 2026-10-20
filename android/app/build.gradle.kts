@@ -73,6 +73,8 @@ val syncWebAssets by tasks.registering(Sync::class) {
         // The WebView already serves every file locally; a service worker on
         // top of that would only add a second, staler cache layer.
         exclude("sw.js")
+        // Web-host files only: robots.txt and Cloudflare Pages' _headers.
+        exclude("robots.txt", "_headers")
     }
     into(project.file("src/main/assets/www"))
     doFirst {

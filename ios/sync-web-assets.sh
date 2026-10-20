@@ -18,6 +18,7 @@ mkdir -p "${DEST}"
 # --delete keeps the bundle in step with dist when a file is removed.
 # sw.js is excluded: the scheme handler already serves everything locally, and
 # a service worker on top would only add a second, staler cache.
-rsync -a --delete --exclude 'sw.js' "${DIST}/" "${DEST}/"
+# robots.txt and _headers are web-host files only.
+rsync -a --delete --exclude 'sw.js' --exclude 'robots.txt' --exclude '_headers' "${DIST}/" "${DEST}/"
 
 echo "Synced $(find "${DEST}" -type f | wc -l | tr -d ' ') web files into the bundle."

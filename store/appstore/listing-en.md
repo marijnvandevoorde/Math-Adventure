@@ -96,5 +96,5 @@ maths,math,arithmetic,numberbonds,addition,subtraction,kids,children,school,lear
 ## Marketing URL  (optional)
 
 ```
-https://math-adventures.small-victories.co/
+https://small-victories.co/
 ```
