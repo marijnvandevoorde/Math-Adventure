@@ -2,11 +2,8 @@
 
 **Last updated: 7 August 2026**
 
-⚠️ Before publishing: replace `[CONTACT EMAIL]` and `[LEGAL ENTITY]` below, then
-host this page at a public URL. Both stores require a reachable privacy policy
-URL, and Google Play additionally requires it for any app in a Families
-programme. A copy at
-`https://math-adventures.small-victories.co/privacy` would do.
+Original draft. The published, canonical policy is
+https://small-victories.co/projects/math-adventure/privacy; edit that page, not this file.
 
 ---
 

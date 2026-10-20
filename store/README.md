@@ -92,7 +92,7 @@ store/
 │   └── feature-graphic-en-1024x500.png  … and English
 ├── play/listing-nl.md, listing-en.md  Play store copy, ready to paste
 ├── appstore/listing-nl.md, listing-en.md  App Store copy, ready to paste
-├── privacy-policy.md                  Needs hosting; both stores require a URL
+├── privacy-policy.md                  Live at small-victories.co/projects/math-adventure/privacy
 ├── compliance-answers.md              Data safety, content rating, App Privacy
 └── screenshots/
     ├── scenes.js                      Drives the app into each screenshot state

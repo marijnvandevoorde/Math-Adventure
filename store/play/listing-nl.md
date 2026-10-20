@@ -89,5 +89,5 @@ kunnen.
 | **Tags** | Rekenen / Onderwijs, Voor het hele gezin |
 | **E-mailadres contact** | `hello@small-victories.co` |
 | **Website** | `https://small-victories.co/` |
-| **Privacybeleid-URL** | `https://marijnvandevoorde.github.io/Math-Adventure/privacy.html` |
+| **Privacybeleid-URL** | `https://small-victories.co/projects/math-adventure/privacy` |
 | **Prijs** | €0,89 / $0,89 — zie wel de opmerking over prijsdrempels in `store/README.md` |

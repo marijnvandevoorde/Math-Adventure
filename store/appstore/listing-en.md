@@ -91,7 +91,15 @@ maths,math,arithmetic,numberbonds,addition,subtraction,kids,children,school,lear
 
 ## Support URL  (required)
 
-⚠️ TO FILL IN — App Store rejects the submission without a working support page.
+```
+https://small-victories.co/contact
+```
+
+## Privacy Policy URL  (required)
+
+```
+https://small-victories.co/projects/math-adventure/privacy
+```
 
 ## Marketing URL  (optional)
 
