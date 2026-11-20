@@ -100,7 +100,7 @@ https://small-victories.co/contact
 ## Privacybeleid-URL  (verplicht)
 
 ```
-https://small-victories.co/projects/math-adventure/privacy
+https://www.small-victories.co/projects/math-adventure/privacy
 ```
 
 ## Marketing-URL  (optioneel)
