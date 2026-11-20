@@ -98,7 +98,7 @@ https://small-victories.co/contact
 ## Privacy Policy URL  (required)
 
 ```
-https://small-victories.co/projects/math-adventure/privacy
+https://www.small-victories.co/projects/math-adventure/privacy
 ```
 
 ## Marketing URL  (optional)

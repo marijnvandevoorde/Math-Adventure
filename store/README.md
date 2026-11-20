@@ -21,6 +21,21 @@ The game is **embedded, not proxied**. Neither app can reach
 mode. `../dist` is the single source of truth — `npm run build:dist` at the repo
 root, and both projects pick it up on their next build.
 
+## Apply with the next App Store version
+
+The live App Store listing (1.0, checked 2026-11-20) still has these old values.
+App Store Connect only lets you change them while a new version is being
+prepared, so set them then:
+
+| Field (where) | Locales | Live now | Set to |
+| --- | --- | --- | --- |
+| Name (App Information) | en-US | `Simple math adventures` | `Math Adventure: Ages 6-9` |
+| Privacy Policy URL (App Information) | nl-NL, en-US | `https://small-victories.co/privacy-policy/math-adventure-privacy-policy` | `https://www.small-victories.co/projects/math-adventure/privacy` |
+| Marketing URL (version) | nl-NL, en-US | `https://math-adventures.small-victories.co/` | `https://small-victories.co/` |
+
+The `www.` privacy page answers 200; the apex `small-victories.co` and the old
+URL redirect to it. Copy for every field is in `appstore/listing-{nl,en}.md`.
+
 ---
 
 ## ⚠️ Pricing at $0.50 — check the floor first
