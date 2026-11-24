@@ -32,7 +32,10 @@ terms. We have no access to those backups.
 - No user accounts, sign-in, or email addresses.
 - No advertising, and no advertising identifiers.
 - No analytics, telemetry, crash reporting, or usage measurement.
-- No third-party SDKs of any kind.
+- No third-party SDKs, apart from Google's Play In-App Review library on
+  Android, which only asks Google Play to show its review sheet. On both
+  platforms the review request is shown only after a grown-up answers a sum a
+  child cannot, and the app itself sends and receives nothing.
 - No location, camera, microphone, contacts, or file access.
 - No links out of the app, no social features, no chat, no user-generated
   content.

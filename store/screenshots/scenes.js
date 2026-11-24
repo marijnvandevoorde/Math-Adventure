@@ -245,6 +245,10 @@
       await SCENES.splits_play();
       for (var i = 0; i < 10; i++) await solveSplits();
       await waitFor(function () { return visible($("#scrFeest")); }, "the trophy screen");
+      // Repeated captures on one install would otherwise reach the grown-ups'
+      // review card; store screenshots show the child's view only.
+      var card = $("#reviewCard");
+      if (card) card.hidden = true;
       await wait(500);
     },
 

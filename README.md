@@ -146,5 +146,14 @@ cd android && ./gradlew :app:bundleRelease      # → app-release.aab
 cd ios && open MathAdventure.xcodeproj          # archive from Xcode
 ```
 
+**Review prompt (app builds only).** After the 3rd completed Splitsen round,
+the 🏆 screen shows a small card addressed to grown-ups. "Write a review" opens a
+parental gate (a two-digit × one-digit sum); only a correct answer calls the
+native review API (`SKStoreReviewController` on iOS via the `review` message
+handler, Play In-App Review on Android via `window.AndroidReview`). The card shows
+at most once per 120 days and 3 times in total, and never again once the gate is
+passed; state lives in `localStorage` (`mathAdventureReview`). Without a native
+bridge (the web build) nothing is shown.
+
 Store copy, graphics, 165 generated screenshots and a step-by-step submission
 guide live in [`store/`](store/README.md).

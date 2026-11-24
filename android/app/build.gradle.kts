@@ -23,8 +23,8 @@ android {
         applicationId = "co.smallvictories.mathadventure"
         minSdk = 24
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.0.3"
     }
 
     signingConfigs {
@@ -59,6 +59,11 @@ android {
     packaging {
         resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }
+}
+
+dependencies {
+    // Google Play In-App Review: the parent-gated review prompt (see ReviewBridge).
+    implementation("com.google.android.play:review:2.0.2")
 }
 
 /**
