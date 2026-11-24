@@ -693,3 +693,87 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: 0 4px 0 rgba(46, 204, 113, 0.35);
 }
 .lang-toggle:active { transform: scale(0.95); }
+
+/* ===== Review-vraag voor ouders (alleen in de app-builds) ===== */
+.review-card[hidden] { display: none; }
+.review-card {
+  align-self: center;
+  width: 100%;
+  max-width: 460px;
+  margin-top: clamp(4px, 1.4vh, 14px);
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 20px;
+  padding: 12px 14px;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+.review-text {
+  margin: 0 0 10px;
+  font-size: clamp(14px, 2.4vh, 17px);
+  font-weight: 700;
+  color: var(--ink);
+}
+.review-actions { display: flex; gap: 10px; justify-content: center; }
+.review-btn {
+  border: none;
+  border-radius: 14px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: clamp(14px, 2.2vh, 16px);
+  font-weight: 800;
+  cursor: pointer;
+}
+.review-btn.yes { background: var(--purple); color: #fff; }
+.review-btn.no { background: #ece4ff; color: var(--ink); }
+
+/* Phones in landscape: one compact row so the card stays on screen. */
+@media (max-height: 500px) {
+  .review-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 640px;
+    padding: 6px 10px;
+    margin-top: 0;
+    text-align: left;
+  }
+  .review-text { margin: 0; flex: 1; font-size: 13px; }
+  .review-actions { flex-shrink: 0; }
+  .review-btn { padding: 6px 10px; font-size: 13px; }
+}
+
+.gate h2 { font-size: 26px; }
+.gate-q {
+  margin: 0 0 12px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 800;
+}
+.gate-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: 4px solid #e7e0ff;
+  border-radius: 18px;
+  padding: 10px;
+  font-family: inherit;
+  font-size: 30px;
+  font-weight: 800;
+  text-align: center;
+  color: var(--ink);
+  -webkit-user-select: text;
+  user-select: text;
+}
+.gate-input:focus { outline: none; border-color: var(--purple); }
+.gate-cancel {
+  display: block;
+  margin: 12px auto 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  opacity: 0.7;
+  cursor: pointer;
+}

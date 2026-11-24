@@ -1,12 +1,31 @@
 #import "GameViewController.h"
 #import "AppAssetSchemeHandler.h"
+#import <StoreKit/StoreKit.h>
 #import <WebKit/WebKit.h>
+
+/// The web app posts to window.webkit.messageHandlers.review once a grown-up
+/// has passed its parental gate. The web build checks for this handler and
+/// shows no review prompt when it is absent.
+static NSString *const kReviewHandler = @"review";
+
+/// WKUserContentController retains its handlers; this keeps it from retaining
+/// the view controller that owns the web view.
+@interface WeakScriptMessageHandler : NSObject <WKScriptMessageHandler>
+@property (nonatomic, weak) id<WKScriptMessageHandler> target;
+@end
+
+@implementation WeakScriptMessageHandler
+- (void)userContentController:(WKUserContentController *)controller
+      didReceiveScriptMessage:(WKScriptMessage *)message {
+    [self.target userContentController:controller didReceiveScriptMessage:message];
+}
+@end
 
 /// The game itself is unchanged from the web build; this controller only
 /// supplies what a browser would have — a full-screen surface with no chrome, a
 /// WebView tuned for small hands (no zoom, no rubber-band scrolling, no text
 /// selection), and safe-area insets the app's CSS already knows how to pad for.
-@interface GameViewController () <WKNavigationDelegate>
+@interface GameViewController () <WKNavigationDelegate, WKScriptMessageHandler>
 @property (nonatomic, strong) WKWebView *webView;
 @property (nonatomic, assign) BOOL pinsOrientation;
 @end
@@ -28,6 +47,9 @@
     config.allowsInlineMediaPlayback = YES;
     config.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
     config.suppressesIncrementalRendering = YES;
+    WeakScriptMessageHandler *reviewHandler = [[WeakScriptMessageHandler alloc] init];
+    reviewHandler.target = self;
+    [config.userContentController addScriptMessageHandler:reviewHandler name:kReviewHandler];
 
     self.webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:config];
     self.webView.opaque = NO;
@@ -79,6 +101,21 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self pinScreenshotOrientation];
+}
+
+#pragma mark - Review request
+
+- (void)userContentController:(WKUserContentController *)controller
+      didReceiveScriptMessage:(WKScriptMessage *)message {
+    if (![message.name isEqualToString:kReviewHandler]) return;
+    UIWindowScene *scene = self.view.window.windowScene;
+    if (scene == nil) return;
+    // AppStore.requestReview(in:) is Swift-only; this is its Objective-C
+    // equivalent and still works. iOS decides whether a prompt actually shows.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    [SKStoreReviewController requestReviewInScene:scene];
+#pragma clang diagnostic pop
 }
 
 #pragma mark - Navigation

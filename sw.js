@@ -8,7 +8,7 @@
  */
 /// <reference lib="webworker" />
 const sw = self;
-const CACHE = "math-adventure-v4";
+const CACHE = "math-adventure-v5";
 const ASSETS = [
     "./",
     "./index.html",

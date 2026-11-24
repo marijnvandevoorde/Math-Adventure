@@ -40,6 +40,8 @@ public class MainActivity extends Activity {
             "(function(){"
           + "  var m=document.getElementById('settingsModal');"
           + "  if(m&&!m.hidden){var c=document.getElementById('closeSettings');if(c){c.click();return 'handled';}}"
+          + "  var g=document.getElementById('reviewGate');"
+          + "  if(g&&!g.hidden){var x=document.getElementById('gateCancel');if(x){x.click();return 'handled';}}"
           + "  var home=document.getElementById('scrHome');"
           + "  if(home&&home.hidden){"
           + "    var b=document.querySelectorAll('.js-home');"
@@ -114,6 +116,10 @@ public class MainActivity extends Activity {
                 }
             });
         }
+
+        // Lets the web app ask for a Play review once a grown-up has passed its
+        // parental gate. The web build shows no review prompt without it.
+        web.addJavascriptInterface(new ReviewBridge(this), ReviewBridge.NAME);
 
         setContentView(web);
 

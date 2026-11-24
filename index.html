@@ -182,6 +182,14 @@
         <button class="numchoice again" id="btnAgain">Nog een keer! 🔁</button>
         <button class="numchoice other" id="btnOther">Ander getal 🎲</button>
       </div>
+      <!-- Shown to grown-ups only after a few rounds, in the app-store builds. -->
+      <div class="review-card" id="reviewCard" hidden>
+        <p class="review-text" id="reviewText">Grote mensen: vinden jullie Rekenavontuur leuk? Een review helpt ons enorm.</p>
+        <div class="review-actions">
+          <button class="review-btn yes" id="reviewYes">Review schrijven</button>
+          <button class="review-btn no" id="reviewNo">Niet nu</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -221,6 +229,18 @@
 
       <button class="big-btn" id="closeSettings">Spelen maar! 🎉</button>
     </div>
+  </div>
+
+  <!-- ===== Ouderpoort (voor de review-vraag) ===== -->
+  <div class="modal-overlay" id="reviewGate" hidden>
+    <form class="modal gate" id="reviewGateForm" autocomplete="off">
+      <h2 id="gateTitle">Alleen voor grote mensen</h2>
+      <p class="gate-q" id="gateQ">Hoeveel is 14 × 6?</p>
+      <input class="gate-input" id="gateInput" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" aria-labelledby="gateQ" />
+      <p class="hint" id="gateHint"></p>
+      <button class="big-btn" type="submit" id="gateOk">OK</button>
+      <button class="gate-cancel" type="button" id="gateCancel">Annuleren</button>
+    </form>
   </div>
 
   <!-- Confetti canvas -->

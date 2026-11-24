@@ -34,6 +34,14 @@
     other: string;
     cheers: string[];
     tries: string[];
+    // Review-vraag voor ouders; {app} en {q} worden ingevuld.
+    reviewText: string;
+    reviewYes: string;
+    reviewNo: string;
+    gateTitle: string;
+    gateQ: string;
+    gateWrong: string;
+    gateCancel: string;
   }
 
   const I18N: Record<Lang, Strings> = {
@@ -59,6 +67,13 @@
       other: "Ander getal 🎲",
       cheers: ["Super! 🎉", "Goed zo! ⭐", "Klasse! 🤩", "Ja! 🚀", "Geweldig! 🌈", "Briljant! 💎", "Joepie! 🎊"],
       tries: ["Probeer nog eens! 💪", "Bijna! 🙂", "Net niet — jij kan dit!", "Ga zo door! ✨"],
+      reviewText: "Grote mensen: vinden jullie {app} leuk? Een review helpt ons enorm.",
+      reviewYes: "Review schrijven",
+      reviewNo: "Niet nu",
+      gateTitle: "Alleen voor grote mensen",
+      gateQ: "Hoeveel is {q}?",
+      gateWrong: "Dat klopt niet. Probeer deze eens.",
+      gateCancel: "Annuleren",
     },
     en: {
       title: "Math Adventure",
@@ -82,6 +97,13 @@
       other: "Different number 🎲",
       cheers: ["Awesome! 🎉", "Well done! ⭐", "Great! 🤩", "Yes! 🚀", "Amazing! 🌈", "Brilliant! 💎", "Woohoo! 🎊"],
       tries: ["Try again! 💪", "Almost! 🙂", "Not quite — you've got this!", "Keep going! ✨"],
+      reviewText: "Grown-ups: enjoying {app}? A review helps a lot.",
+      reviewYes: "Write a review",
+      reviewNo: "Not now",
+      gateTitle: "Grown-ups only",
+      gateQ: "What is {q}?",
+      gateWrong: "Not quite. Try this one.",
+      gateCancel: "Cancel",
     },
     fr: {
       title: "Aventure des maths",
@@ -105,6 +127,13 @@
       other: "Autre nombre 🎲",
       cheers: ["Super ! 🎉", "Bravo ! ⭐", "Génial ! 🤩", "Oui ! 🚀", "Formidable ! 🌈", "Brillant ! 💎", "Youpi ! 🎊"],
       tries: ["Essaie encore ! 💪", "Presque ! 🙂", "Pas tout à fait — tu peux le faire !", "Continue ! ✨"],
+      reviewText: "Les grands : vous aimez {app} ? Un avis nous aide beaucoup.",
+      reviewYes: "Donner un avis",
+      reviewNo: "Pas maintenant",
+      gateTitle: "Réservé aux adultes",
+      gateQ: "Combien font {q} ?",
+      gateWrong: "Ce n'est pas ça. Essayez celle-ci.",
+      gateCancel: "Annuler",
     },
     es: {
       title: "Aventura matemática",
@@ -128,6 +157,13 @@
       other: "Otro número 🎲",
       cheers: ["¡Genial! 🎉", "¡Muy bien! ⭐", "¡Fantástico! 🤩", "¡Sí! 🚀", "¡Increíble! 🌈", "¡Brillante! 💎", "¡Yupi! 🎊"],
       tries: ["¡Inténtalo otra vez! 💪", "¡Casi! 🙂", "Aún no… ¡tú puedes!", "¡Sigue así! ✨"],
+      reviewText: "Adultos: ¿os gusta {app}? Una reseña nos ayuda mucho.",
+      reviewYes: "Escribir una reseña",
+      reviewNo: "Ahora no",
+      gateTitle: "Solo para adultos",
+      gateQ: "¿Cuánto es {q}?",
+      gateWrong: "No es correcto. Prueben con esta.",
+      gateCancel: "Cancelar",
     },
   };
 
@@ -250,6 +286,18 @@
     lblOps: byId("lblOps"),
     lblLang: byId("lblLang"),
     langToggles: byId("langToggles"),
+    // review-vraag
+    reviewCard: byId("reviewCard"),
+    reviewText: byId("reviewText"),
+    reviewYes: byId("reviewYes"),
+    reviewNo: byId("reviewNo"),
+    reviewGate: byId("reviewGate"),
+    reviewGateForm: byId<HTMLFormElement>("reviewGateForm"),
+    gateTitle: byId("gateTitle"),
+    gateQ: byId("gateQ"),
+    gateInput: byId<HTMLInputElement>("gateInput"),
+    gateHint: byId("gateHint"),
+    gateCancel: byId("gateCancel"),
   };
 
   // ---------- Actieve taal ----------
@@ -286,6 +334,12 @@
     el.feestSub.textContent = t.feestSub;
     el.btnAgain.textContent = t.again;
     el.btnOther.textContent = t.other;
+    el.reviewText.textContent = t.reviewText.replace("{app}", t.title);
+    el.reviewYes.textContent = t.reviewYes;
+    el.reviewNo.textContent = t.reviewNo;
+    el.gateTitle.textContent = t.gateTitle;
+    el.gateQ.textContent = t.gateQ.replace("{q}", gateSum.a + " × " + gateSum.b);
+    el.gateCancel.textContent = t.gateCancel;
   }
 
   const mascots = ["🦄", "🐢", "🐰", "🦊", "🐼", "🐸", "🐥", "🐙", "🦖", "🐳"];
@@ -655,6 +709,7 @@
       el.splitsMascot.className = "mascot";
       splitsLocked = false;
       if (splitsGood >= SPLITS_GOAL) {
+        onRoundComplete();
         show("feest");
         burstConfetti();
         window.setTimeout(burstConfetti, 350);
@@ -676,6 +731,131 @@
       splitsTyped = "";
       updateSplitsBox();
     }, 700);
+  }
+
+  // =====================================================================
+  // ===== Review-vraag voor ouders ======================================
+  // =====================================================================
+  //
+  // Na de 3e voltooide Splitsen-ronde verschijnt op het feestscherm een klein
+  // kaartje voor de ouders. Alleen in de app-builds (de native shell zet een
+  // brug klaar); de gewone webversie toont nooit iets. De echte review-vraag
+  // van de winkel komt pas na een ouderpoort: een som die een kind van 6–9
+  // niet uit het hoofd kent. Hooguit 1× per 120 dagen, 3× in totaal, en nooit
+  // meer zodra de poort één keer gehaald is. "Niet nu" telt ook als vraag.
+
+  interface ReviewState {
+    rounds: number; // voltooide rondes
+    asks: number; // keren dat het kaartje getoond is
+    lastAsk: number; // ms sinds epoch, 0 = nooit
+    done: boolean; // poort gehaald → nooit meer vragen
+  }
+
+  const REVIEW_KEY = "mathAdventureReview";
+  const REVIEW_MIN_ROUNDS = 3;
+  const REVIEW_MAX_ASKS = 3;
+  const REVIEW_GAP_MS = 120 * 24 * 60 * 60 * 1000;
+
+  function num(v: unknown): number {
+    return typeof v === "number" && isFinite(v) && v >= 0 ? v : 0;
+  }
+
+  function loadReview(): ReviewState {
+    try {
+      const raw = localStorage.getItem(REVIEW_KEY);
+      if (raw) {
+        const r = JSON.parse(raw) as Partial<ReviewState>;
+        return { rounds: num(r.rounds), asks: num(r.asks), lastAsk: num(r.lastAsk), done: r.done === true };
+      }
+    } catch (e) {
+      /* kapotte opslag negeren */
+    }
+    return { rounds: 0, asks: 0, lastAsk: 0, done: false };
+  }
+
+  function saveReview(r: ReviewState): void {
+    try {
+      localStorage.setItem(REVIEW_KEY, JSON.stringify(r));
+    } catch (e) {
+      /* opslag kan ontbreken */
+    }
+  }
+
+  interface ReviewHosts {
+    webkit?: { messageHandlers?: { review?: { postMessage(msg: string): void } } };
+    AndroidReview?: { request(): void };
+  }
+
+  /** De review-brug van de native shell, of null in een gewone browser. */
+  function nativeReview(): (() => void) | null {
+    const w = window as unknown as ReviewHosts;
+    const ios = w.webkit?.messageHandlers?.review;
+    if (ios) return () => ios.postMessage("request");
+    const android = w.AndroidReview;
+    if (android && typeof android.request === "function") return () => android.request();
+    return null;
+  }
+
+  function shouldAsk(r: ReviewState, now: number): boolean {
+    return (
+      !r.done &&
+      r.rounds >= REVIEW_MIN_ROUNDS &&
+      r.asks < REVIEW_MAX_ASKS &&
+      (r.lastAsk === 0 || now - r.lastAsk >= REVIEW_GAP_MS)
+    );
+  }
+
+  function onRoundComplete(): void {
+    const r = loadReview();
+    r.rounds += 1;
+    const now = Date.now();
+    const ask = nativeReview() !== null && shouldAsk(r, now);
+    if (ask) {
+      // Tonen telt als vraag, ook als er niets op getikt wordt.
+      r.asks += 1;
+      r.lastAsk = now;
+    }
+    saveReview(r);
+    el.reviewCard.hidden = !ask;
+  }
+
+  // Ouderpoort: tweecijferig × eencijferig (36–171), buiten bereik van 6–9 jaar.
+  let gateSum = { a: 14, b: 6 };
+  function newGateSum(): void {
+    const prev = gateSum;
+    do {
+      gateSum = { a: 12 + Math.floor(Math.random() * 8), b: 3 + Math.floor(Math.random() * 7) };
+    } while (gateSum.a === prev.a && gateSum.b === prev.b);
+    el.gateQ.textContent = L().gateQ.replace("{q}", gateSum.a + " × " + gateSum.b);
+    el.gateInput.value = "";
+  }
+
+  function openGate(): void {
+    el.reviewCard.hidden = true;
+    newGateSum();
+    el.gateHint.textContent = "";
+    el.reviewGate.hidden = false;
+    el.gateInput.focus();
+  }
+
+  function closeGate(): void {
+    el.gateInput.blur();
+    el.reviewGate.hidden = true;
+  }
+
+  function submitGate(): void {
+    const val = parseInt(el.gateInput.value.trim(), 10);
+    if (val !== gateSum.a * gateSum.b) {
+      el.gateHint.textContent = L().gateWrong;
+      newGateSum();
+      return;
+    }
+    const r = loadReview();
+    r.done = true;
+    saveReview(r);
+    closeGate();
+    const request = nativeReview();
+    if (request) request();
   }
 
   // =====================================================================
@@ -730,7 +910,7 @@
 
   // Fysiek toetsenbord: naar het actieve spel sturen.
   window.addEventListener("keydown", (e) => {
-    if (!el.settingsModal.hidden) return;
+    if (!el.settingsModal.hidden || !el.reviewGate.hidden) return;
     const handler = active === "reeksen" ? onKey : active === "splits" ? onSplitsKey : null;
     if (!handler) return;
     if (e.key >= "0" && e.key <= "9") handler(e.key);
@@ -770,6 +950,15 @@
   el.btnOther.addEventListener("click", () => show("splitsSetup"));
 
   el.closeSettings.addEventListener("click", closeSettings);
+  el.reviewYes.addEventListener("click", openGate);
+  el.reviewNo.addEventListener("click", () => {
+    el.reviewCard.hidden = true;
+  });
+  el.gateCancel.addEventListener("click", closeGate);
+  el.reviewGateForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    submitGate();
+  });
   el.maxRange.addEventListener("input", () => {
     el.maxValue.textContent = el.maxRange.value;
   });
